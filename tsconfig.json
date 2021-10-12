@@ -12,10 +12,7 @@
     "skipLibCheck": true,
     "lib": ["esnext", "es6", "dom"],
     "allowJs": true,
-    "moduleResolution": "node",
-    // these two are enabled for typeorm configuration
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "moduleResolution": "node"
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./node_modules/**/*", "./dist/**/*"]
