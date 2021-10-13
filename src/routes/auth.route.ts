@@ -13,6 +13,6 @@ authRouter.post('/register', signupValidator, validationHandler, register);
 authRouter.post('/login', loginValidator, validationHandler, login);
 
 // URL: /v1/auth/logout
-authRouter.post('/logout', checkLogin, logout);
+authRouter.get('/logout', checkLogin, logout);
 
 export default authRouter;
