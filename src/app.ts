@@ -10,6 +10,7 @@ import authRouter from './routes/auth.route';
 
 const app = express();
 
+// load environment variables
 dotenv.config();
 
 // body and cookie parsers
@@ -46,3 +47,15 @@ mongoose
         console.error(err);
         console.log('Failed to connect Database');
     });
+
+// called when mongodb is disconnected
+mongoose.connection.on('disconnected', () => {
+    console.log('Database Disconnected');
+});
+
+// called when closing the server (when pressing ctrl + c)
+process.on('SIGINT', async () => {
+    await mongoose.connection.close();
+    console.log('server stopped');
+    process.exit(0);
+});

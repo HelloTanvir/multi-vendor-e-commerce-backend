@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import mongoose, { Document } from 'mongoose';
 
@@ -9,7 +10,7 @@ export interface UserData {
 
 export interface IUser extends UserData, Document {
     matchPassword: (enteredPassword: string) => Promise<boolean>;
-    getSignedJwtToken: () => string;
+    getToken: (type: 'access token' | 'refresh token') => Promise<string>;
 }
 
 const UserSchema = new mongoose.Schema<IUser>(
@@ -17,6 +18,8 @@ const UserSchema = new mongoose.Schema<IUser>(
         email: {
             type: String,
             required: [true, 'Please input your email'],
+            lowercase: true,
+            unique: true,
         },
         password: {
             type: String,
@@ -38,10 +41,28 @@ UserSchema.methods.matchPassword = async function (enteredPassword: string): Pro
     return isMatch;
 };
 
-// generate token to save in cookie for user login
-UserSchema.methods.getSignedJwtToken = function (): string {
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE,
+// generate access token
+UserSchema.methods.getToken = function (type: 'access token' | 'refresh token'): Promise<any> {
+    return new Promise((resolve, reject) => {
+        jwt.sign(
+            { id: this._id },
+            type === 'access token'
+                ? process.env.ACCESS_TOKEN_SECRET
+                : process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn:
+                    type === 'access token'
+                        ? process.env.ACCESS_TOKEN_EXPIRE
+                        : process.env.REFRESH_TOKEN_EXPIRE,
+            },
+            (err, token) => {
+                if (err) {
+                    console.log(err.message);
+                    return reject(new createHttpError.InternalServerError());
+                }
+                return resolve(token);
+            }
+        );
     });
 };
 

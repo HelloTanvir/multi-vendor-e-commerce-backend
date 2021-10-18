@@ -1,32 +1,53 @@
 import { Request, Response } from 'express';
+import createHttpError from 'http-errors';
+import RefreshToken from '../models/refreshToken.model';
 import User, { IUser, UserData } from '../models/user.model';
 
-interface UserRequest extends Request {
-    body: UserData;
-}
+const sendTokenResponse = async (people: IUser, statusCode: number, res: Response) => {
+    try {
+        const accessToken = await people.getToken('access token');
+        const refreshToken = await people.getToken('refresh token');
 
-const sendTokenResponse = (people: IUser, statusCode: number, res: Response) => {
-    const token = people.getSignedJwtToken();
+        // save refresh token in database
+        const userId = people._id;
+        const savedRefreshToken = await RefreshToken.findOne({ userId });
+        if (savedRefreshToken) {
+            savedRefreshToken.refreshToken = refreshToken;
+            await savedRefreshToken.save();
+            // await savedRefreshToken.updateOne({ refreshToken });
+        } else {
+            const newRefreshToken = new RefreshToken({ userId, refreshToken });
+            await newRefreshToken.save();
+        }
 
-    const options: { expires: Date; httpOnly: boolean; secure?: boolean } = {
-        expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-    };
+        const options: { expires: Date; httpOnly: boolean; secure?: boolean } = {
+            expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
+            httpOnly: true,
+        };
 
-    if (process.env.NODE_ENV === 'production') {
-        options.secure = true;
-        // options.sameSite = 'none';
+        if (process.env.NODE_ENV === 'production') {
+            options.secure = true;
+            // options.sameSite = 'none';
+        }
+
+        res.status(statusCode).cookie('access-token', accessToken, options).json({
+            refreshToken,
+            data: people,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
     }
-
-    res.status(statusCode).cookie('token', token, options).json({
-        token,
-        data: people,
-    });
 };
 
-export const register = async (req: UserRequest, res: Response) => {
+export const register = async (req: Request, res: Response) => {
     try {
-        const { email } = req.body;
+        const { email } = req.body as UserData;
 
         const user = new User(req.body);
         await user.save();
@@ -47,10 +68,10 @@ export const register = async (req: UserRequest, res: Response) => {
     }
 };
 
-export const login = async (req: UserRequest, res: Response) => {
-    const { email, password } = req.body;
-
+export const login = async (req: Request, res: Response) => {
     try {
+        const { email, password } = req.body as UserData;
+
         const user = await User.findOne({ email });
 
         if (!user)
@@ -86,14 +107,49 @@ export const login = async (req: UserRequest, res: Response) => {
     }
 };
 
-export const logout = (req: Request, res: Response) => {
-    res.status(200)
-        .cookie('token', 'none', {
-            expires: new Date(Date.now() + 10 * 1000),
-            httpOnly: true,
-        })
-        .json({
-            success: true,
-            message: 'You are logged out',
+export const logout = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req;
+
+        const deletedToken = await RefreshToken.findOneAndDelete({ userId });
+
+        if (!deletedToken) throw new createHttpError.InternalServerError('Logout failed');
+
+        res.status(200)
+            .cookie('token', 'none', {
+                expires: new Date(Date.now() + 10 * 1000),
+                httpOnly: true,
+            })
+            .json({
+                success: true,
+                message: 'You are logged out',
+            });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
         });
+    }
+};
+
+export const generateTokens = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.userId);
+
+        if (!user)
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+
+        sendTokenResponse(user, 200, res);
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
 };
