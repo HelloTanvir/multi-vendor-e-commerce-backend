@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import RefreshToken from '../models/refreshToken.model';
 import User, { IUser, UserData } from '../models/user.model';
@@ -20,15 +20,14 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
             await newRefreshToken.save();
         }
 
-        const options: { expires: Date; httpOnly: boolean; secure?: boolean } = {
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        const options: CookieOptions = {
             expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
             httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'strict' : 'lax',
         };
-
-        if (process.env.NODE_ENV === 'production') {
-            options.secure = true;
-            // options.sameSite = 'none';
-        }
 
         res.status(statusCode).cookie('access-token', accessToken, options).json({
             refreshToken,

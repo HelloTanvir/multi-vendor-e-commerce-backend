@@ -15,8 +15,8 @@ authRouter.post('/login', loginValidator, validationHandler, login);
 // URL: /v1/auth/logout
 authRouter.delete('/logout', verifyAccessToken, verifyRefreshToken, logout);
 
-// URL: /v1/auth/refresh-token
-authRouter.post('/refresh-token', verifyRefreshToken, generateTokens);
+// URL: /v1/auth/refresh
+authRouter.post('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
