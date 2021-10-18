@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
 import authRouter from './routes/auth.route';
@@ -25,6 +26,11 @@ app.use(
         credentials: true,
     })
 );
+
+// log request information
+if (process.env.NODE_ENV !== 'production') {
+    app.use(morgan('dev'));
+}
 
 // mount routes
 app.use('/v1/auth', authRouter);
