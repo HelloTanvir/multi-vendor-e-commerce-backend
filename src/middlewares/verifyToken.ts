@@ -8,20 +8,25 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
     try {
         let token = '';
 
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            // get token from Bearer token in header
-            [, token] = req.headers.authorization.split(' ');
-        } else if (req.cookies['access-token']) {
-            // get token from cookie
+        // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        //     // get token from Bearer token in header
+        //     [, token] = req.headers.authorization.split(' ');
+        // } else if (req.cookies['access-token']) {
+        //     // get token from cookie
+        //     token = req.cookies['access-token'];
+        // }
+
+        if (req.cookies['access-token']) {
             token = req.cookies['access-token'];
         }
 
         // make sure token exists
-        if (!token)
+        if (!token) {
             throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+        }
 
         // verify token
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, payload) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, payload: any) => {
             if (err) {
                 if (err.name === 'JsonWebTokenError') {
                     next(

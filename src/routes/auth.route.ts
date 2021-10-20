@@ -20,9 +20,17 @@ authRouter.post('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
-    res.json({
+    res.status(200).json({
         user: req.user,
         message: 'sellbee amake onek onek taka dibe',
+    });
+});
+
+// URL: /v1/auth/product
+authRouter.get('/product', verifyAccessToken, (req: Request, res: Response) => {
+    res.status(200).json({
+        user: req.user,
+        message: 'product page',
     });
 });
 
