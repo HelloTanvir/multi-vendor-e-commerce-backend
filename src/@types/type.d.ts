@@ -4,13 +4,23 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             PORT: string;
+
             FRONTEND_URL: string;
+
             MONGO_URL: string;
+
             ACCESS_TOKEN_SECRET: string;
             REFRESH_TOKEN_SECRET: string;
+
             ACCESS_TOKEN_EXPIRE: string;
             REFRESH_TOKEN_EXPIRE: string;
+
             JWT_COOKIE_EXPIRE: string;
+
+            OTP_URL: string;
+            OTP_USERNAME: string;
+            OTP_PASSWORD: string;
+
             NODE_ENV: 'production' | 'development';
         }
     }
