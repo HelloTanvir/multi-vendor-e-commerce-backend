@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { Request, Response, Router } from 'express';
-import { generateTokens, login, logout, register } from '../controllers/auth.controller';
+import { generateTokens, login, logout, register, verifyOtp } from '../controllers/auth.controller';
 import { loginValidator, signupValidator } from '../middlewares/authValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToken';
+import TempUser from '../models/tempUser.model';
 
 const authRouter = Router();
 
@@ -19,49 +19,26 @@ authRouter.delete('/logout', verifyAccessToken, verifyRefreshToken, logout);
 // URL: /v1/auth/refresh
 authRouter.post('/refresh', verifyRefreshToken, generateTokens);
 
+// URL: /v1/auth/verify-register-otp
+authRouter.post('/verify-register-otp', verifyOtp('register'));
+
+// URL: /v1/auth/verify-login-otp
+authRouter.post('/verify-login-otp', verifyOtp('login'));
+
+authRouter.get('/bal', async (req: Request, res: Response) => {
+    const tempUser = await TempUser.findOne({ number: '01521572755' });
+    res.status(200).json({
+        tempUser,
+        message: 'testing data expiration',
+    });
+});
+
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
     res.status(200).json({
         user: req.user,
         message: 'sellbee amake onek onek taka dibe',
     });
-});
-
-// URL: /v1/auth/product
-authRouter.get('/product', verifyAccessToken, (req: Request, res: Response) => {
-    res.status(200).json({
-        user: req.user,
-        message: 'product page',
-    });
-});
-
-// URL: /v1/auth/otp
-authRouter.post('/otp', async (req: Request, res: Response) => {
-    const { number } = req.body as { number: string };
-
-    const randomNumber = Math.floor(Math.random() * 90000 + 1000);
-
-    const otpProviderUrl = `${process.env.OTP_URL}?username=${process.env.OTP_USERNAME}&password=${
-        process.env.OTP_PASSWORD
-    }&number=88${number}&message=${process.env.OTP_USERNAME.toUpperCase()} OTP Code is ${randomNumber}`;
-
-    const otpResponse = await axios.post(
-        otpProviderUrl,
-        {},
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        }
-    );
-
-    if (otpResponse) {
-        console.log(otpResponse);
-
-        res.cookie('otp', `${randomNumber}`, { expires: new Date(Date.now() + 60 * 1000) })
-            .status(200)
-            .json({ success: true });
-    }
 });
 
 export default authRouter;

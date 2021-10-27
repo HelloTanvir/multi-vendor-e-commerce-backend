@@ -1,60 +1,23 @@
-import { CookieOptions, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
+import OTP from '../models/otp.model';
 import RefreshToken from '../models/refreshToken.model';
-import User, { IUser, UserData } from '../models/user.model';
-
-const sendTokenResponse = async (people: IUser, statusCode: number, res: Response) => {
-    try {
-        const accessToken = await people.getToken('access token');
-        const refreshToken = await people.getToken('refresh token');
-
-        // save refresh token in database
-        const userId = people._id;
-        const savedRefreshToken = await RefreshToken.findOne({ userId });
-        if (savedRefreshToken) {
-            savedRefreshToken.refreshToken = refreshToken;
-            await savedRefreshToken.save();
-            // await savedRefreshToken.updateOne({ refreshToken });
-        } else {
-            const newRefreshToken = new RefreshToken({ userId, refreshToken });
-            await newRefreshToken.save();
-        }
-
-        const isProduction = process.env.NODE_ENV === 'production';
-
-        const options: CookieOptions = {
-            expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? 'strict' : 'lax',
-        };
-
-        res.status(statusCode).cookie('access-token', accessToken, options).json({
-            refreshToken,
-            data: people,
-        });
-    } catch (error: any) {
-        res.status(error.statusCode || 500).json({
-            errors: {
-                common: {
-                    msg: error.message || 'Server error occured',
-                },
-            },
-        });
-    }
-};
+import TempUser from '../models/tempUser.model';
+import User, { UserData } from '../models/user.model';
+import sendOTPResponse from '../utils/sendOTPResponse';
+import sendTokenResponse from '../utils/sendTokenResponse';
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { email } = req.body as UserData;
+        // take user data and temporarily save to database
+        const newTempUser = new TempUser(req.body);
+        const tempUser = await newTempUser.save();
 
-        const user = new User(req.body);
-        await user.save();
-
-        const registeredUser = await User.findOne({ email });
-
-        if (registeredUser) {
-            sendTokenResponse(registeredUser, 201, res);
+        if (tempUser) {
+            // send user a otp
+            await sendOTPResponse(tempUser, 200, res);
+        } else {
+            throw new createHttpError.InternalServerError();
         }
     } catch (error: any) {
         res.status(error.statusCode || 500).json({
@@ -69,34 +32,24 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body as UserData;
+        const { number } = req.body as UserData;
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ number });
 
-        if (!user)
-            return res.status(401).json({
+        if (user) {
+            // send user a otp
+            await sendOTPResponse(user, 200, res);
+        } else {
+            res.status(401).json({
                 errors: {
-                    email: {
-                        msg: 'You are not registered with this email',
-                    },
-                },
-            });
-
-        const isPasswordMatch = await user.matchPassword(password);
-
-        if (!isPasswordMatch) {
-            return res.status(401).json({
-                errors: {
-                    password: {
-                        msg: 'Incorrect password',
+                    number: {
+                        msg: 'You are not registered with this number',
                     },
                 },
             });
         }
-
-        return sendTokenResponse(user, 200, res);
     } catch (error: any) {
-        return res.status(error.statusCode || 500).json({
+        res.status(error.statusCode || 500).json({
             errors: {
                 common: {
                     msg: error.message || 'Server error occured',
@@ -123,6 +76,52 @@ export const logout = async (req: Request, res: Response) => {
                 success: true,
                 message: 'You are logged out',
             });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
+export const verifyOtp = (route: 'register' | 'login') => async (req: Request, res: Response) => {
+    try {
+        const { number, OTP: userOtp } = req.body as { number: string; OTP: string };
+
+        const savedOtp = await OTP.findOne({ number });
+
+        const tempUser = route === 'register' ? await TempUser.findOne({ number }) : null;
+
+        if (route === 'register' && !tempUser) {
+            throw new createHttpError.InternalServerError();
+        }
+
+        if (!savedOtp) {
+            throw new createHttpError.RequestTimeout('Your OTP is expired');
+        }
+
+        const isOtpMatch = await savedOtp.matchOTP(userOtp);
+
+        if (!isOtpMatch) {
+            throw new createHttpError.BadRequest('Incorrect OTP');
+        }
+
+        const newUser = new User({
+            email: tempUser?.email,
+            firstName: tempUser?.firstName,
+            lastName: tempUser?.lastName,
+            address: tempUser?.address,
+            number: tempUser?.number,
+        });
+
+        const user = route === 'register' ? await newUser.save() : await User.findOne({ number });
+
+        if (user) {
+            sendTokenResponse(user, route === 'register' ? 201 : 200, res);
+        }
     } catch (error: any) {
         res.status(error.statusCode || 500).json({
             errors: {
