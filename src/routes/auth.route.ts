@@ -3,7 +3,6 @@ import { generateTokens, login, logout, register, verifyOtp } from '../controlle
 import { loginValidator, signupValidator } from '../middlewares/authValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToken';
-import TempUser from '../models/tempUser.model';
 
 const authRouter = Router();
 
@@ -24,14 +23,6 @@ authRouter.post('/verify-register-otp', verifyOtp('register'));
 
 // URL: /v1/auth/verify-login-otp
 authRouter.post('/verify-login-otp', verifyOtp('login'));
-
-authRouter.get('/bal', async (req: Request, res: Response) => {
-    const tempUser = await TempUser.findOne({ number: '01521572755' });
-    res.status(200).json({
-        tempUser,
-        message: 'testing data expiration',
-    });
-});
 
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
