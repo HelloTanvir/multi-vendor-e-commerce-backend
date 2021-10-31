@@ -20,7 +20,7 @@ const OTPSchema = new mongoose.Schema<IOTP>(
         },
         createdAt: {
             type: Date,
-            expires: 180,
+            // expires: 180,
             default: Date.now,
             // index: {
             //     expires: 180,
@@ -31,7 +31,7 @@ const OTPSchema = new mongoose.Schema<IOTP>(
     { timestamps: true }
 );
 
-// OTPSchema.index({ createdAt: 1 }, { expireAfterSeconds: 180 });
+OTPSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 });
 
 // hash otp before saving in database
 OTPSchema.pre('save', async function () {

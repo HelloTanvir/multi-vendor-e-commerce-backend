@@ -31,7 +31,7 @@ const TempUserSchema = new mongoose.Schema<ITempUser>(
         },
         createdAt: {
             type: Date,
-            expires: 180,
+            // expires: 60,
             default: Date.now,
             // index: {
             //     expires: 180,
@@ -42,7 +42,7 @@ const TempUserSchema = new mongoose.Schema<ITempUser>(
     { timestamps: true }
 );
 
-// TempUserSchema.index({ createdAt: 1 }, { expireAfterSeconds: 180 });
+TempUserSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 });
 
 const TempUser = mongoose.model('Temp-user', TempUserSchema);
 
