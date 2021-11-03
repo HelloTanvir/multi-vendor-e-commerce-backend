@@ -28,10 +28,12 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
             sameSite: isProduction ? 'strict' : 'lax',
         };
 
-        res.status(statusCode).cookie('access-token', accessToken, options).json({
-            refreshToken,
-            data: people,
-        });
+        res.status(statusCode)
+            .cookie('access-token', accessToken, options)
+            .cookie('refresh-token', refreshToken, options)
+            .json({
+                data: people,
+            });
     } catch (error: any) {
         res.status(error.statusCode || 500).json({
             errors: {

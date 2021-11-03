@@ -59,9 +59,16 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
 
 export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { refreshToken } = req.body as { refreshToken: string };
+        let refreshToken = '';
 
-        if (!refreshToken) throw new createHttpError.BadRequest();
+        if (req.cookies['refresh-token']) {
+            refreshToken = req.cookies['refresh-token'];
+        }
+
+        // make sure token exists
+        if (!refreshToken) {
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+        }
 
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 

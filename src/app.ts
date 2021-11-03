@@ -57,7 +57,7 @@ app.use(errorHandler);
 // connect to database and start the app
 mongoose
     // .connect(process.env.MONGO_URL)
-    .connect('mongodb://localhost:27017/Sellbee-Local')
+    .connect('mongodb://localhost:27017/Sellbee')
     .then(() => {
         console.log('Database Connected Successfully');
 
