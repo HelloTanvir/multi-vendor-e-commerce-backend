@@ -10,7 +10,7 @@ const sendOTPResponse = async (number: string, statusCode: number, res: Response
 
         console.log(generatedOtp);
 
-        redisClient.setex(number, 60, `${generatedOtp}`);
+        redisClient.setex(number, +process.env.OTP_EXPIRE, `${generatedOtp}`);
 
         // const otpProviderUrl = `${process.env.OTP_URL}?username=${
         //     process.env.OTP_USERNAME

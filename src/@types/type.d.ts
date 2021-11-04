@@ -23,6 +23,8 @@ declare global {
             OTP_USERNAME: string;
             OTP_PASSWORD: string;
 
+            OTP_EXPIRE: string;
+
             NODE_ENV: 'production' | 'development';
         }
     }
