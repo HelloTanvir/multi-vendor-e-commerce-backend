@@ -13,7 +13,7 @@ authRouter.post('/login', loginValidator, validationHandler, login);
 authRouter.delete('/logout', verifyAccessToken, verifyRefreshToken, logout);
 
 // URL: /v1/auth/refresh
-authRouter.post('/refresh', verifyRefreshToken, generateTokens);
+authRouter.get('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/auth/verify-otp
 authRouter.post('/verify-otp', verifyOtp);
