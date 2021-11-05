@@ -26,7 +26,13 @@ authRouter.get('/refresh', verifyRefreshToken, generateTokens);
 authRouter.post('/verify-otp', verifyOtp);
 
 // URL: /v1/auth/profile-update
-authRouter.post('/profile-update', verifyAccessToken, profileUpdateValidator, profileUpdate);
+authRouter.post(
+    '/profile-update',
+    profileUpdateValidator,
+    validationHandler,
+    verifyAccessToken,
+    profileUpdate
+);
 
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {

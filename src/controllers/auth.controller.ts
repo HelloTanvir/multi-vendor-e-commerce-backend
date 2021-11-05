@@ -99,15 +99,11 @@ export const profileUpdate = async (req: Request, res: Response) => {
     try {
         const { email, firstName, lastName, address, number } = req.body as UserData;
 
-        req.user.email = email;
-        req.user.firstName = firstName;
-        req.user.lastName = lastName;
-        req.user.address = address;
-
-        // if no updated number is given, don't override it in database
-        if (number) {
-            req.user.number = number;
-        }
+        if (email) req.user.email = email;
+        if (firstName) req.user.firstName = firstName;
+        if (lastName) req.user.lastName = lastName;
+        if (address) req.user.address = address;
+        if (number) req.user.number = number;
 
         await req.user.save();
 
