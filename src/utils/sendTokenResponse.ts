@@ -30,7 +30,10 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
 
         res.status(statusCode)
             .cookie('access-token', accessToken, options)
-            .cookie('refresh-token', refreshToken, options)
+            .cookie('refresh-token', refreshToken, {
+                ...options,
+                expires: new Date(Date.now() + 15 * 86400 * 1000),
+            })
             .json({
                 data: people,
             });
