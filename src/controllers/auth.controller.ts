@@ -95,6 +95,36 @@ export const verifyOtp = async (req: Request, res: Response) => {
     });
 };
 
+export const profileUpdate = async (req: Request, res: Response) => {
+    try {
+        const { email, firstName, lastName, address, number } = req.body as UserData;
+
+        req.user.email = email;
+        req.user.firstName = firstName;
+        req.user.lastName = lastName;
+        req.user.address = address;
+
+        // if no updated number is given, don't override it in database
+        if (number) {
+            req.user.number = number;
+        }
+
+        await req.user.save();
+
+        res.status(200).json({
+            data: req.user,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
 export const generateTokens = async (req: Request, res: Response) => {
     try {
         const user = await User.findById(req.userId);

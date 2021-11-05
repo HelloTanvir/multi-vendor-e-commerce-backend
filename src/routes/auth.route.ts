@@ -1,6 +1,13 @@
 import { Request, Response, Router } from 'express';
-import { generateTokens, login, logout, verifyOtp } from '../controllers/auth.controller';
-import loginValidator from '../middlewares/authValidator';
+import {
+    generateTokens,
+    login,
+    logout,
+    profileUpdate,
+    // eslint-disable-next-line prettier/prettier
+    verifyOtp
+} from '../controllers/auth.controller';
+import { loginValidator, profileUpdateValidator } from '../middlewares/authValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToken';
 
@@ -17,6 +24,9 @@ authRouter.get('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/auth/verify-otp
 authRouter.post('/verify-otp', verifyOtp);
+
+// URL: /v1/auth/profile-update
+authRouter.post('/profile-update', verifyAccessToken, profileUpdateValidator, profileUpdate);
 
 // URL: /v1/auth/test
 authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
