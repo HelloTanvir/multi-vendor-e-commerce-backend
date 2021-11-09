@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 // models
 import RefreshToken from './models/refreshToken.model';
 import User from './models/user.model';
+import redisClient from './utils/redisClient';
 
 // load environment variables
 dotenv.config();
@@ -13,6 +14,9 @@ mongoose.connect(process.env.MONGO_URL);
 // delete data
 const deleteData = async () => {
     try {
+        redisClient.flushall('ASYNC', (err, succeeded) => {
+            console.log(`redis collection cleared: ${succeeded}`);
+        });
         await User.deleteMany();
         await RefreshToken.deleteMany();
         console.log('data destroyed...');
