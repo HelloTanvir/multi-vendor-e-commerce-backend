@@ -23,7 +23,7 @@ const deleteData = async () => {
 };
 
 // command:
-//      node seeder -d (for deleting from database)
+//      yarn clear-database
 
 if (process.argv[2] === '-d') {
     deleteData();

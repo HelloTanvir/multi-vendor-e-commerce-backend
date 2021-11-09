@@ -9,8 +9,7 @@
     "start": "NODE_ENV=production node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc -p .",
-    "install-dev-dependencies": "yarn add -D @types/bcryptjs @types/cookie-parser @types/cors @types/http-errors @types/jsonwebtoken @types/multer @types/lodash",
-    "install-dependencies": "yarn add bcryptjs cookie-parser cors dotenv express express-validator http-errors jsonwebtoken multer lodash",
+    "clear-database": "ts-node src/clearDatabase.ts -d",
     "lint": "yarn add -D eslint prettier && npx install-peerdeps --dev eslint-config-airbnb-base && yarn add -D eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser"
   },
   "devDependencies": {
