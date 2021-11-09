@@ -10,6 +10,7 @@ declare global {
             MONGO_URL: string;
 
             REDIS_URL: string;
+            REDIS_PASSWORD: string;
 
             ACCESS_TOKEN_SECRET: string;
             REFRESH_TOKEN_SECRET: string;

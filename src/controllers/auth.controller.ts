@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
+import { RedisClient } from 'redis';
 import RefreshToken from '../models/refreshToken.model';
 import User, { UserData } from '../models/user.model';
-import redisClient from '../utils/redisClient';
 import sendOTPResponse from '../utils/sendOTPResponse';
 import sendTokenResponse from '../utils/sendTokenResponse';
 
@@ -53,7 +53,9 @@ export const logout = async (req: Request, res: Response) => {
 export const verifyOtp = async (req: Request, res: Response) => {
     const { number, otp } = req.body as { number: string; otp: string };
 
-    redisClient.get(number, async (err, savedOtp) => {
+    const { redisClient } = global as any;
+
+    (redisClient as RedisClient).get(number, async (err, savedOtp) => {
         try {
             console.log({ otp, savedOtp, match: otp === savedOtp });
 

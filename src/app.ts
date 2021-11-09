@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import redis from 'redis';
 import xss from 'xss-clean';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
@@ -59,7 +60,16 @@ mongoose
     // .connect(process.env.MONGO_URL)
     .connect('mongodb://localhost:27017/Sellbee')
     .then(() => {
-        console.log('Database Connected Successfully');
+        console.log('MongoDB Connected Successfully');
+
+        // for localhost
+        // const client = redis.createClient();
+        const client = redis.createClient({
+            url: process.env.REDIS_URL,
+            password: process.env.REDIS_PASSWORD,
+        });
+
+        (global as any).redisClient = client;
 
         const PORT = process.env.PORT || 5000;
         app.listen(+PORT, () => {

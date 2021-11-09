@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import otpGenerator from 'otp-generator';
-import redisClient from './redisClient';
+import { RedisClient } from 'redis';
 
 const sendOTPResponse = async (number: string, statusCode: number, res: Response) => {
     try {
@@ -10,7 +10,9 @@ const sendOTPResponse = async (number: string, statusCode: number, res: Response
 
         console.log(generatedOtp);
 
-        redisClient.setex(number, +process.env.OTP_EXPIRE, `${generatedOtp}`);
+        const { redisClient } = global as any;
+
+        (redisClient as RedisClient).setex(number, +process.env.OTP_EXPIRE, `${generatedOtp}`);
 
         // const otpProviderUrl = `${process.env.OTP_URL}?username=${
         //     process.env.OTP_USERNAME
