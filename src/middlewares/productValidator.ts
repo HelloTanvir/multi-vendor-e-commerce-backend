@@ -23,8 +23,6 @@ export const productValidator = [
 ];
 
 export const productUpdateValidator = [
-    check('productId').isLength({ min: 1 }).withMessage('Please id is required').trim(),
-
     check('image')
         .isLength({ min: 1 })
         .optional({ nullable: true })
