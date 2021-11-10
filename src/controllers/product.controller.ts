@@ -55,6 +55,8 @@ export const getProducts = async (req: Request, res: Response) => {
         const products = await Product.find().limit(limit).skip(skip);
 
         res.status(200).json({
+            page,
+            size,
             data: products,
         });
     } catch (error: any) {
