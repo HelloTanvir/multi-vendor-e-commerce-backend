@@ -14,6 +14,7 @@ import { verifyAccessToken } from '../middlewares/verifyToken';
 const productRouter = Router();
 
 // URL: /v1/products
+// URL: /v1/products?page=1&size=10 (for pagination)
 productRouter
     .route('/')
     .post(productValidator, validationHandler, verifyAccessToken, createProduct)
