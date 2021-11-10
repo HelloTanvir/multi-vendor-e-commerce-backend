@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
     createProduct,
     deleteProduct,
-    getAllProducts,
+    getProducts,
     getSingleProduct,
     // eslint-disable-next-line prettier/prettier
     updateProduct
@@ -17,7 +17,7 @@ const productRouter = Router();
 productRouter
     .route('/')
     .post(productValidator, validationHandler, verifyAccessToken, createProduct)
-    .get(getAllProducts);
+    .get(getProducts);
 
 // URL: /v1/products/1
 productRouter

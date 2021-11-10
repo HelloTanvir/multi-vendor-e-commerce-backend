@@ -42,9 +42,17 @@ export const getSingleProduct = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
     try {
-        const products = await Product.find();
+        let { page, size } = req.query as { page: string | number; size: string | number };
+
+        if (!page) page = 1;
+        if (!size) size = 10;
+
+        const limit = +size;
+        const skip = (+page - 1) * +size;
+
+        const products = await Product.find().limit(limit).skip(skip);
 
         res.status(200).json({
             data: products,
