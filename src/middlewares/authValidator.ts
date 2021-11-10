@@ -1,7 +1,7 @@
 import { check } from 'express-validator';
 
 export const loginValidator = [
-    check('number').isLength({ min: 11 }).withMessage('Please input your number').trim(),
+    check('number').isLength({ min: 13, max: 13 }).withMessage('Please input your number').trim(),
 ];
 
 export const profileUpdateValidator = [
@@ -30,7 +30,7 @@ export const profileUpdateValidator = [
         .trim(),
 
     check('number')
-        .isLength({ min: 13 })
+        .isLength({ min: 13, max: 13 })
         .optional({ nullable: true })
         .withMessage('Phone number should be 13 characters long (including 88 as country code)')
         .trim(),

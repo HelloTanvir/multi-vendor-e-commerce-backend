@@ -26,7 +26,7 @@ authRouter.get('/refresh', verifyRefreshToken, generateTokens);
 authRouter.post('/verify-otp', verifyOtp);
 
 // URL: /v1/auth/profile-update
-authRouter.post(
+authRouter.patch(
     '/profile-update',
     profileUpdateValidator,
     validationHandler,
