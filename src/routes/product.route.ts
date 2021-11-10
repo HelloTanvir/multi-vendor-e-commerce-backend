@@ -13,31 +13,17 @@ import { verifyAccessToken } from '../middlewares/verifyToken';
 
 const productRouter = Router();
 
-// URL: /v1/products/create-one
-productRouter.post(
-    '/create-one',
-    productValidator,
-    validationHandler,
-    verifyAccessToken,
-    createProduct
-);
+// URL: /v1/products
+productRouter
+    .route('/')
+    .post(productValidator, validationHandler, verifyAccessToken, createProduct)
+    .get(getAllProducts);
 
-// URL: /v1/products/get-one
-productRouter.get('/get-one', getSingleProduct);
-
-// URL: /v1/products/get-all
-productRouter.get('/get-all', getAllProducts);
-
-// URL: /v1/products/update-one
-productRouter.patch(
-    '/update-one',
-    productUpdateValidator,
-    validationHandler,
-    verifyAccessToken,
-    updateProduct
-);
-
-// URL: /v1/products/delete-one
-productRouter.delete('/delete-one', verifyAccessToken, deleteProduct);
+// URL: /v1/products/1
+productRouter
+    .route('/:productId')
+    .get(getSingleProduct)
+    .patch(productUpdateValidator, validationHandler, verifyAccessToken, updateProduct)
+    .delete(verifyAccessToken, deleteProduct);
 
 export default productRouter;
