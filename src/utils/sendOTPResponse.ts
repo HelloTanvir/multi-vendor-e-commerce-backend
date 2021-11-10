@@ -6,7 +6,7 @@ import { RedisClient } from 'redis';
 const sendOTPResponse = async (number: string, statusCode: number, res: Response) => {
     try {
         const generatedOtp = otpGenerator
-            .generate(6, { digits: true, alphabets: false, upperCase: false, specialChars: false })
+            .generate(4, { digits: true, alphabets: false, upperCase: false, specialChars: false })
             .toString();
 
         console.log(generatedOtp);
