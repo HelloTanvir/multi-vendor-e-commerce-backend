@@ -111,7 +111,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
-        const { productId } = req.body as { productId: string };
+        const { productId } = req.params as { productId: string };
 
         const deletedProduct = await Product.findOneAndDelete({
             $and: [{ vendorId: req.user._id }, { _id: productId }],
