@@ -24,7 +24,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getSingleProduct = async (req: Request, res: Response) => {
     try {
-        const { productId } = req.body as { productId: string };
+        const { productId } = req.params as { productId: string };
 
         const product = await Product.findById(productId);
 
@@ -69,13 +69,11 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
-    interface UpdatedData extends IProduct {
-        productId: string;
-    }
-
     try {
-        const { productId, image, name, weight, regularPrice, salesPrice, inventory, description } =
-            req.body as UpdatedData;
+        const { productId } = req.params as { productId: string };
+
+        const { image, name, weight, regularPrice, salesPrice, inventory, description } =
+            req.body as IProduct;
 
         const product = await Product.findOne({
             $and: [{ vendorId: req.user._id }, { _id: productId }],
