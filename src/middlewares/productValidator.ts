@@ -1,8 +1,6 @@
 import { check } from 'express-validator';
 
 export const productValidator = [
-    check('vendorId').isLength({ min: 1 }).withMessage('Please input vendor id').trim(),
-
     check('image').isLength({ min: 1 }).withMessage('Please input product image').trim(),
 
     check('name').isLength({ min: 1 }).withMessage('Please input product name').trim(),
@@ -25,12 +23,6 @@ export const productValidator = [
 ];
 
 export const productUpdateValidator = [
-    check('vendorId')
-        .isLength({ min: 1 })
-        .optional({ nullable: true })
-        .withMessage('Please input vendor id')
-        .trim(),
-
     check('image')
         .isLength({ min: 1 })
         .optional({ nullable: true })
