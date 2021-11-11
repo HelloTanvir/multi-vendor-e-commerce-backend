@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import redis from 'redis';
 // models
+import Product from './models/product.model';
 import RefreshToken from './models/refreshToken.model';
 import User from './models/user.model';
 
@@ -25,6 +26,7 @@ const deleteData = async () => {
         });
         await User.deleteMany();
         await RefreshToken.deleteMany();
+        await Product.deleteMany();
         console.log('data destroyed...');
         process.exit();
     } catch (error) {

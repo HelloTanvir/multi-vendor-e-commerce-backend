@@ -72,18 +72,19 @@ export const verifyOtp = async (req: Request, res: Response) => {
             if (registeredUser) {
                 // send access and refresh token to user
                 await sendTokenResponse(registeredUser, 200, res);
-            } else {
-                // create a new user
-                const newUser = new User({
-                    number,
-                });
+                return;
+            }
 
-                const user = await newUser.save();
+            // create a new user
+            const newUser = new User({
+                number,
+            });
 
-                if (user) {
-                    // send access and refresh token to user
-                    sendTokenResponse(user, 201, res);
-                }
+            const user = await newUser.save();
+
+            if (user) {
+                // send access and refresh token to user
+                sendTokenResponse(user, 201, res);
             }
         } catch (error: any) {
             res.status(error.statusCode || 500).json({
