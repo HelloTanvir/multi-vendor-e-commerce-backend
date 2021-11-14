@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
 import {
     generateTokens,
     login,
@@ -33,13 +33,5 @@ authRouter.patch(
     verifyAccessToken,
     profileUpdate
 );
-
-// URL: /v1/auth/test
-authRouter.get('/test', verifyAccessToken, (req: Request, res: Response) => {
-    res.status(200).json({
-        user: req.user,
-        message: 'sellbee amake onek onek taka dibe',
-    });
-});
 
 export default authRouter;
