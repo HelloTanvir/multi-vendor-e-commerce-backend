@@ -25,7 +25,10 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
             expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
             httpOnly: true,
             secure: isProduction,
-            sameSite: isProduction ? 'strict' : 'lax',
+            // sameSite: isProduction ? 'strict' : 'lax',
+
+            // for development
+            sameSite: 'lax',
         };
 
         res.status(statusCode)
