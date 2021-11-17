@@ -38,9 +38,17 @@ app.use(xss());
 app.use(hpp());
 
 // prevent cors issue
+// app.use(
+//     cors({
+//         origin: process.env.FRONTEND_URL,
+//         credentials: true,
+//     })
+// );
+
+// development
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: ['http://localhost:3000', 'http://localhost:8080'],
         credentials: true,
     })
 );
