@@ -28,7 +28,7 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
             // sameSite: isProduction ? 'strict' : 'lax',
 
             // for development
-            sameSite: 'lax',
+            sameSite: 'none',
         };
 
         res.status(statusCode)
