@@ -24,6 +24,7 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
         const options: CookieOptions = {
             expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
             // httpOnly: true,
+            httpOnly: false,
             secure: isProduction,
             // sameSite: isProduction ? 'strict' : 'lax',
 
