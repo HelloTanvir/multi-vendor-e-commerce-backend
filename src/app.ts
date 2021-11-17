@@ -52,6 +52,7 @@ app.use(
             'http://localhost:3000',
             'http://localhost:8080',
             'https://quirky-meninsky-8c97db.netlify.app/',
+            'https://quirky-meninsky-8c97db.netlify.app/login',
         ],
         credentials: true,
     })
