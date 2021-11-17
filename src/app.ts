@@ -48,7 +48,11 @@ app.use(hpp());
 // development
 app.use(
     cors({
-        origin: ['http://localhost:3000', 'http://localhost:8080'],
+        origin: [
+            'http://localhost:3000',
+            'http://localhost:8080',
+            'https://quirky-meninsky-8c97db.netlify.app/',
+        ],
         credentials: true,
     })
 );
