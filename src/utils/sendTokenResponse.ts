@@ -31,13 +31,14 @@ const sendTokenResponse = async (people: IUser, statusCode: number, res: Respons
             sameSite: 'none',
         };
 
-        res.status(statusCode)
-            .cookie('access-token', accessToken, options)
-            .cookie('refresh-token', refreshToken, {
+        res.cookie('access-token', accessToken, options)
+
+        res.cookie('refresh-token', refreshToken, {
                 ...options,
                 expires: new Date(Date.now() + 15 * 86400 * 1000),
             })
-            .json({
+
+        res.status(statusCode).json({
                 data: people,
             });
     } catch (error: any) {
