@@ -17,7 +17,7 @@ const authRouter = Router();
 authRouter.post('/login', loginValidator, validationHandler, login);
 
 // URL: /v1/auth/logout
-authRouter.delete('/logout', verifyAccessToken, verifyRefreshToken, logout);
+authRouter.delete('/logout', verifyRefreshToken, logout);
 
 // URL: /v1/auth/refresh
 authRouter.get('/refresh', verifyRefreshToken, generateTokens);
