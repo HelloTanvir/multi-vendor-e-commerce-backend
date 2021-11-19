@@ -22,8 +22,8 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
 
         // make sure token exists
         if (!token) {
-            // throw new createHttpError.Unauthorized('Not authorized to get access to this route');
-            throw new createHttpError.BadRequest('token is required');
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+            // throw new createHttpError.BadRequest('token is required');
         }
 
         // verify token
@@ -68,8 +68,8 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
 
         // make sure token exists
         if (!refreshToken) {
-            // throw new createHttpError.Unauthorized('Not authorized to get access to this route');
-            throw new createHttpError.BadRequest('token is required');
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+            // throw new createHttpError.BadRequest('token is required');
         }
 
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
