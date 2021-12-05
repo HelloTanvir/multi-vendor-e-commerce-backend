@@ -31,7 +31,13 @@ productRouter
 productRouter
     .route('/:productId')
     .get(getSingleProduct)
-    .patch(productUpdateValidator, validationHandler, verifyAccessToken, updateProduct)
+    .patch(
+        imageUpload.single('image'),
+        productUpdateValidator,
+        validationHandler,
+        verifyAccessToken,
+        updateProduct
+    )
     .delete(verifyAccessToken, deleteProduct);
 
 export default productRouter;

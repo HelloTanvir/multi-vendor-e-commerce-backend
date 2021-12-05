@@ -19,22 +19,10 @@ export const productValidator = [
 ];
 
 export const productUpdateValidator = [
-    check('image')
-        .isLength({ min: 1 })
-        .optional({ nullable: true })
-        .withMessage('Please input product image')
-        .trim(),
-
     check('name')
         .isLength({ min: 1 })
         .optional({ nullable: true })
         .withMessage('Please input product name')
-        .trim(),
-
-    check('weight')
-        .isLength({ min: 1 })
-        .optional({ nullable: true })
-        .withMessage('Please input product weight')
         .trim(),
 
     check('regularPrice')

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Product, { IProduct } from '../models/product.model';
+import s3 from '../utils/s3';
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
@@ -83,18 +84,36 @@ export const updateProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params as { productId: string };
 
-        const { image, name, regularPrice, salesPrice, inventory, description } =
-            req.body as IProduct;
+        const { name, regularPrice, salesPrice, inventory, description } = req.body as IProduct;
 
         const product = await Product.findOne({
             $and: [{ vendorId: req.user._id }, { _id: productId }],
         });
 
         if (!product) {
+            if (req.file && (req.file as any).key) {
+                await s3
+                    .deleteObject({
+                        Bucket: 'sellbeez-products',
+                        Key: (req.file as any).key,
+                    })
+                    .promise();
+            }
+
             throw new createHttpError.BadRequest('Invalid product id');
         }
 
-        if (image) product.image = image;
+        // delete previous image and edit new image link in database
+        if (req.file && (req.file as any).key) {
+            await s3
+                .deleteObject({
+                    Bucket: 'sellbeez-products',
+                    Key: product.s3Key,
+                })
+                .promise();
+
+            product.image = (req.file as any).location;
+        }
         if (name) product.name = name;
         if (regularPrice) product.regularPrice = regularPrice;
         if (salesPrice) product.salesPrice = salesPrice;
