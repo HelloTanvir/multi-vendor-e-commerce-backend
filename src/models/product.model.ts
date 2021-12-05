@@ -3,8 +3,8 @@ import mongoose, { Document } from 'mongoose';
 export interface IProduct extends Document {
     vendorId: string;
     image: string;
+    s3Key: string;
     name: string;
-    weight: string;
     regularPrice: string;
     salesPrice: string;
     inventory: string;
@@ -23,14 +23,14 @@ const ProductSchema = new mongoose.Schema<IProduct>(
             required: [true, 'image is required'],
         },
 
+        s3Key: {
+            type: String,
+            required: [true, 'S3-key is required'],
+        },
+
         name: {
             type: String,
             required: [true, 'product name is required'],
-        },
-
-        weight: {
-            type: String,
-            required: [true, 'product weight is required'],
         },
 
         regularPrice: {

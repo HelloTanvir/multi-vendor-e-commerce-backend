@@ -7,11 +7,11 @@ export const createProduct = async (req: Request, res: Response) => {
         if (!req.file) {
             throw new createHttpError.BadRequest('Product image is required');
         }
-        console.log(req.file);
 
         const product = new Product({
             vendorId: req.user._id,
             image: (req.file as any).location,
+            s3Key: (req.file as any).key,
             ...req.body,
         });
 
@@ -83,7 +83,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params as { productId: string };
 
-        const { image, name, weight, regularPrice, salesPrice, inventory, description } =
+        const { image, name, regularPrice, salesPrice, inventory, description } =
             req.body as IProduct;
 
         const product = await Product.findOne({
@@ -96,7 +96,6 @@ export const updateProduct = async (req: Request, res: Response) => {
 
         if (image) product.image = image;
         if (name) product.name = name;
-        if (weight) product.weight = weight;
         if (regularPrice) product.regularPrice = regularPrice;
         if (salesPrice) product.salesPrice = salesPrice;
         if (inventory) product.inventory = inventory;
