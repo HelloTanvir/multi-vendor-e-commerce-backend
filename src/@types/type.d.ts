@@ -26,6 +26,9 @@ declare global {
 
             OTP_EXPIRE: string;
 
+            AWS_ACCESS_KEY: string;
+            AWS_SECRET_KEY: string;
+
             NODE_ENV: 'production' | 'development';
         }
     }
