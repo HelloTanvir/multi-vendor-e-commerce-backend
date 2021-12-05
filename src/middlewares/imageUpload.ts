@@ -1,16 +1,19 @@
+import dotenv from 'dotenv';
 import createHttpError from 'http-errors';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import path from 'path';
 import s3 from '../utils/s3';
 
+dotenv.config();
+
 const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const imageUpload = multer({
     storage: multerS3({
         s3,
-        bucket: process.env.AWS_BUCKET,
-        acl: 'public-read',
+        bucket: 'sellbeez-products',
+        // acl: 'public-read',
         metadata(req, file, cb) {
             cb(null, { fieldName: file.fieldname });
         },

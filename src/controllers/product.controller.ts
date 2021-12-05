@@ -4,7 +4,16 @@ import Product, { IProduct } from '../models/product.model';
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
-        const product = new Product({ vendorId: req.user._id, ...req.body });
+        if (!req.file) {
+            throw new createHttpError.BadRequest('Product image is required');
+        }
+        console.log(req.file);
+
+        const product = new Product({
+            vendorId: req.user._id,
+            image: (req.file as any).location,
+            ...req.body,
+        });
 
         await product.save();
 
