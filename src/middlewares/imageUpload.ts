@@ -13,7 +13,6 @@ const imageUpload = multer({
     storage: multerS3({
         s3,
         bucket: 'sellbeez-products',
-        // acl: 'public-read',
         metadata(req, file, cb) {
             cb(null, { fieldName: file.fieldname });
         },
