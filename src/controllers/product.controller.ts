@@ -148,6 +148,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid product id');
         }
 
+        await s3
+            .deleteObject({
+                Bucket: 'sellbeez-products',
+                Key: deletedProduct.s3Key,
+            })
+            .promise();
+
         res.status(200).json({
             message: 'product deleted successfully',
         });
