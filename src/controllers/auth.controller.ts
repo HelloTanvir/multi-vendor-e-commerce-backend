@@ -95,13 +95,29 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
 export const profileUpdate = async (req: Request, res: Response) => {
     try {
-        const { email, firstName, lastName, address, number } = req.body as UserData;
+        const {
+            email,
+            number,
+            firstName,
+            lastName,
+            address,
+            apartment,
+            city,
+            country,
+            postalCode,
+            isPersonal,
+        } = req.body as UserData;
 
         if (email) req.user.email = email;
+        if (number) req.user.number = number;
         if (firstName) req.user.firstName = firstName;
         if (lastName) req.user.lastName = lastName;
         if (address) req.user.address = address;
-        if (number) req.user.number = number;
+        if (apartment) req.user.apartment = apartment;
+        if (city) req.user.city = city;
+        if (country) req.user.country = country;
+        if (postalCode) req.user.postalCode = postalCode;
+        if (isPersonal !== null || isPersonal !== undefined) req.user.isPersonal = isPersonal;
 
         await req.user.save();
 
