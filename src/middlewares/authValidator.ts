@@ -11,6 +11,12 @@ export const profileUpdateValidator = [
         .withMessage('Invalid email address')
         .trim(),
 
+    check('number')
+        .isLength({ min: 13, max: 13 })
+        .optional({ nullable: true })
+        .withMessage('Phone number should be 13 characters long (including 88 as country code)')
+        .trim(),
+
     check('firstName')
         .isLength({ min: 3 })
         .optional({ nullable: true })
@@ -29,9 +35,17 @@ export const profileUpdateValidator = [
         .withMessage('Address should contain at least 5 characters')
         .trim(),
 
-    check('number')
-        .isLength({ min: 13, max: 13 })
+    check('country')
+        .isLength({ min: 4 })
         .optional({ nullable: true })
-        .withMessage('Phone number should be 13 characters long (including 88 as country code)')
+        .withMessage('Country should be at least 4 characters long')
+        .trim(),
+
+    check('postalCode')
+        .isLength({ min: 4 })
+        .optional({ nullable: true })
+        .withMessage('Postal Code should contain at least 4 characters')
+        .isNumeric({ no_symbols: true })
+        .withMessage('Postal Code should be number')
         .trim(),
 ];
