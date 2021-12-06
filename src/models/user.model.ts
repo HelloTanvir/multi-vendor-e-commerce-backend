@@ -4,10 +4,15 @@ import mongoose, { Document } from 'mongoose';
 
 export interface UserData {
     email: string;
+    number: string;
     firstName: string;
     lastName: string;
     address: string;
-    number: string;
+    apartment: string;
+    city: string;
+    country: string;
+    postalCode: number;
+    isPersonal: boolean;
     isVerified: boolean;
 }
 
@@ -20,24 +25,26 @@ const UserSchema = new mongoose.Schema<IUser>(
         email: {
             type: String,
             lowercase: true,
-            // required: [true, 'Please input your email'],
         },
-        firstName: {
-            type: String,
-            // required: [true, 'Please input your first name'],
-        },
-        lastName: {
-            type: String,
-            // required: [true, 'Please input your last name'],
-        },
-        address: {
-            type: String,
-            // required: [true, 'Please input your address'],
-        },
-        number: {
-            type: String,
-            // required: [true, 'Please input your number'],
-        },
+
+        number: String,
+
+        firstName: String,
+
+        lastName: String,
+
+        address: String,
+
+        apartment: String,
+
+        city: String,
+
+        country: String,
+
+        postalCode: String,
+
+        isPersonal: Boolean,
+
         isVerified: {
             type: Boolean,
             default: false,
@@ -48,7 +55,15 @@ const UserSchema = new mongoose.Schema<IUser>(
 
 UserSchema.pre('save', function () {
     this.isVerified = Boolean(
-        this.email && this.firstName && this.lastName && this.address && this.number
+        this.email &&
+            this.number &&
+            this.firstName &&
+            this.lastName &&
+            this.address &&
+            this.apartment &&
+            this.city &&
+            this.country &&
+            this.postalCode
     );
 });
 
