@@ -105,7 +105,7 @@ export const profileUpdate = async (req: Request, res: Response) => {
             city,
             country,
             postalCode,
-            isPersonal,
+            website,
         } = req.body as UserData;
 
         if (email) req.user.email = email;
@@ -117,7 +117,7 @@ export const profileUpdate = async (req: Request, res: Response) => {
         if (city) req.user.city = city;
         if (country) req.user.country = country;
         if (postalCode) req.user.postalCode = postalCode;
-        if (isPersonal !== null || isPersonal !== undefined) req.user.isPersonal = isPersonal;
+        if (website) req.user.website = website;
 
         await req.user.save();
 
