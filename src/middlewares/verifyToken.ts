@@ -41,6 +41,19 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
                 return;
             }
 
+            // find saved refresh token of the user in database
+            const savedRefreshToken = await RefreshToken.findOne({
+                userId: (payload as { id: string }).id,
+            });
+
+            if (!savedRefreshToken) {
+                next(
+                    new createHttpError.Unauthorized('Not authorized to get access to this route')
+                );
+                return;
+            }
+
+            // find user associated with the access token
             const user = await User.findById((payload as { id: string }).id);
 
             if (!user) {

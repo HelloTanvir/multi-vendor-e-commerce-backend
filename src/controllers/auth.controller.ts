@@ -34,7 +34,7 @@ export const logout = async (req: Request, res: Response) => {
 
         if (!deletedToken) throw new createHttpError.InternalServerError('Logout failed');
 
-        res.status(200).clearCookie('access-token').clearCookie('refresh-token').json({
+        res.status(204).clearCookie('access-token').clearCookie('refresh-token').json({
             success: true,
             message: 'You are logged out',
         });
