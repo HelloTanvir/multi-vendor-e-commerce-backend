@@ -41,7 +41,7 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
                 return;
             }
 
-            // find saved refresh token of the user in database
+            // check existance of refresh token on database
             const savedRefreshToken = await RefreshToken.findOne({
                 userId: (payload as { id: string }).id,
             });
