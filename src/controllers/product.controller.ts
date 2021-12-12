@@ -86,9 +86,11 @@ export const updateProduct = async (req: Request, res: Response) => {
 
         const { name, regularPrice, salesPrice, inventory, description } = req.body as IProduct;
 
-        const product = await Product.findOne({
-            $and: [{ vendorId: req.user._id }, { _id: productId }],
-        });
+        // const product = await Product.findOne({
+        //     $and: [{ vendorId: req.user._id }, { _id: productId }],
+        // });
+
+        const product = await Product.findById(productId);
 
         if (!product) {
             if (req.file && (req.file as any).key) {
