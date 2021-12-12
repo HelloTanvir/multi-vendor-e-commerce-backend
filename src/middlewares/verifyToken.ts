@@ -94,7 +94,13 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
         const savedRefreshToken = await RefreshToken.findOne({
             userId: (decoded as { id: string }).id,
         });
-        if (savedRefreshToken && refreshToken !== savedRefreshToken.refreshToken)
+
+        if (!savedRefreshToken)
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+
+        const isMatchRefreshToken = await savedRefreshToken.matchRefreshToken(refreshToken);
+
+        if (!isMatchRefreshToken)
             throw new createHttpError.Unauthorized('Not authorized to get access to this route');
 
         req.userId = (decoded as { id: string }).id;
