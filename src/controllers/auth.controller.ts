@@ -24,13 +24,17 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     try {
-        const { userId } = req;
+        const refreshToken = await RefreshToken.findOne({ userId: req.userId });
 
-        const deletedToken = await RefreshToken.findOneAndDelete({ userId });
+        let deletedToken;
+
+        if (refreshToken) {
+            deletedToken = await refreshToken.delete();
+        }
 
         if (!deletedToken) throw new createHttpError.InternalServerError('Logout failed');
 
-        res.status(204).clearCookie('access-token').clearCookie('refresh-token').json({
+        res.status(200).clearCookie('access-token').clearCookie('refresh-token').json({
             success: true,
             message: 'You are logged out',
         });
