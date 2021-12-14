@@ -1,5 +1,11 @@
-import { Request, Response, Router } from 'express';
-import { createCoupon, getCoupons, getSingleCoupon } from '../controllers/coupon.controller';
+import { Router } from 'express';
+import {
+    createCoupon,
+    deleteCoupon,
+    getCoupons,
+    // eslint-disable-next-line prettier/prettier
+    getSingleCoupon
+} from '../controllers/coupon.controller';
 import couponValidator from '../middlewares/couponValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
@@ -13,11 +19,6 @@ couponRouter
     .get(verifyAccessToken, getCoupons);
 
 // URL: /v1/coupon/1
-couponRouter
-    .route('/:couponId')
-    .get(getSingleCoupon)
-    .delete(verifyAccessToken, (req: Request, res: Response) => {
-        res.status(200).json({ data: req.body });
-    });
+couponRouter.route('/:couponId').get(getSingleCoupon).delete(verifyAccessToken, deleteCoupon);
 
 export default couponRouter;

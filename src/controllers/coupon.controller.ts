@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import createHttpError from 'http-errors';
 import Coupon from '../models/coupon.model';
 
 export const createCoupon = async (req: Request, res: Response) => {
@@ -60,6 +61,40 @@ export const getCoupons = async (req: Request, res: Response) => {
             page,
             size,
             data: coupons,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
+export const deleteCoupon = async (req: Request, res: Response) => {
+    try {
+        const { couponId } = req.params as { couponId: string };
+
+        const coupon = await Coupon.findById(couponId);
+
+        if (!coupon) {
+            throw new createHttpError.BadRequest('Invalid coupon id');
+        }
+
+        if (coupon.vendorId !== req.user.id) {
+            throw new createHttpError.BadRequest('You are not the vendor of this coupon');
+        }
+
+        const deletedCoupon = await coupon.delete();
+
+        if (!deletedCoupon) {
+            throw new createHttpError.InternalServerError('delete failed');
+        }
+
+        res.status(204).json({
+            message: 'coupon deleted successfully',
         });
     } catch (error: any) {
         res.status(error.statusCode || 500).json({
