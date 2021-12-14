@@ -62,7 +62,7 @@ export const getProducts = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const products = await Product.find().limit(limit).skip(skip);
+        const products = await Product.find({ vendorId: req.user.id }).limit(limit).skip(skip);
 
         res.status(200).json({
             page,

@@ -25,7 +25,7 @@ productRouter
         verifyAccessToken,
         createProduct
     )
-    .get(getProducts);
+    .get(verifyAccessToken, getProducts);
 
 // URL: /v1/products/1
 productRouter
