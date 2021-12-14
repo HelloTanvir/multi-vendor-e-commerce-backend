@@ -13,6 +13,7 @@ import xss from 'xss-clean';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
 import authRouter from './routes/auth.route';
+import couponRouter from './routes/coupon.route';
 import productRouter from './routes/product.route';
 
 const app = express();
@@ -66,6 +67,7 @@ if (process.env.NODE_ENV !== 'production') {
 // mount routes
 app.use('/v1/auth', authRouter);
 app.use('/v1/products', productRouter);
+app.use('/v1/coupon', couponRouter);
 
 // handle errors
 app.use(errorHandler);
