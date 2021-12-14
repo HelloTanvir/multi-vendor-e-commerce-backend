@@ -9,6 +9,7 @@ export interface IProduct extends Document {
     salesPrice: string;
     inventory: string;
     description: string;
+    status: boolean;
 }
 
 const ProductSchema = new mongoose.Schema<IProduct>(
@@ -51,6 +52,11 @@ const ProductSchema = new mongoose.Schema<IProduct>(
         description: {
             type: String,
             required: [true, 'product description is required'],
+        },
+
+        status: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

@@ -84,7 +84,8 @@ export const updateProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params as { productId: string };
 
-        const { name, regularPrice, salesPrice, inventory, description } = req.body as IProduct;
+        const { name, regularPrice, salesPrice, inventory, description, status } =
+            req.body as IProduct;
 
         const product = await Product.findById(productId);
 
@@ -121,6 +122,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         if (salesPrice) product.salesPrice = salesPrice;
         if (inventory) product.inventory = inventory;
         if (description) product.description = description;
+        product.status = !!status;
 
         await product.save();
 
