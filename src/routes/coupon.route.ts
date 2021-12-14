@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { createCoupon, getCoupons } from '../controllers/coupon.controller';
+import { createCoupon, getCoupons, getSingleCoupon } from '../controllers/coupon.controller';
 import couponValidator from '../middlewares/couponValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
@@ -15,9 +15,7 @@ couponRouter
 // URL: /v1/coupon/1
 couponRouter
     .route('/:couponId')
-    .get((req: Request, res: Response) => {
-        res.status(200).json({ data: req.body });
-    })
+    .get(getSingleCoupon)
     .delete(verifyAccessToken, (req: Request, res: Response) => {
         res.status(200).json({ data: req.body });
     });
