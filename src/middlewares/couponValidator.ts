@@ -30,6 +30,8 @@ const couponValidator = [
         .isNumeric({ no_symbols: true })
         .withMessage('Usage limit per user should be number')
         .trim(),
+
+    check('productIds').isArray({ min: 1 }).withMessage('Please input one or more products'),
 ];
 
 export default couponValidator;

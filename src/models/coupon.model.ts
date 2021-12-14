@@ -7,6 +7,7 @@ export interface ICoupon extends Document {
     expiryDate: Date;
     limitPerCoupon: number;
     limitPerUser: number;
+    productIds: string[];
 }
 
 const CouponSchema = new mongoose.Schema<ICoupon>(
@@ -39,6 +40,11 @@ const CouponSchema = new mongoose.Schema<ICoupon>(
         limitPerUser: {
             type: Number,
             required: [true, 'Usage limit per user is required'],
+        },
+
+        productIds: {
+            type: [String],
+            required: [true, 'Products required'],
         },
     },
     { timestamps: true }
