@@ -86,10 +86,6 @@ export const updateProduct = async (req: Request, res: Response) => {
 
         const { name, regularPrice, salesPrice, inventory, description } = req.body as IProduct;
 
-        // const product = await Product.findOne({
-        //     $and: [{ vendorId: req.user._id }, { _id: productId }],
-        // });
-
         const product = await Product.findById(productId);
 
         if (!product) {
@@ -103,6 +99,10 @@ export const updateProduct = async (req: Request, res: Response) => {
             }
 
             throw new createHttpError.BadRequest('Invalid product id');
+        }
+
+        if (product.vendorId !== req.user.id) {
+            throw new createHttpError.BadRequest('You are not the vendor of this product');
         }
 
         // delete previous image and edit new image link in database
@@ -142,12 +142,20 @@ export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params as { productId: string };
 
-        const deletedProduct = await Product.findOneAndDelete({
-            $and: [{ vendorId: req.user._id }, { _id: productId }],
-        });
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            throw new createHttpError.BadRequest('Invalid product id');
+        }
+
+        if (product.vendorId !== req.user.id) {
+            throw new createHttpError.BadRequest('You are not the vendor of this product');
+        }
+
+        const deletedProduct = await product.delete();
 
         if (!deletedProduct) {
-            throw new createHttpError.BadRequest('Invalid product id');
+            throw new createHttpError.InternalServerError('delete failed');
         }
 
         await s3
@@ -157,7 +165,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
             })
             .promise();
 
-        res.status(200).json({
+        res.status(204).json({
             message: 'product deleted successfully',
         });
     } catch (error: any) {
