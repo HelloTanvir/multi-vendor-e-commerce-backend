@@ -5,6 +5,7 @@ import redis from 'redis';
 import Product from './models/product.model';
 import RefreshToken from './models/refreshToken.model';
 import User from './models/user.model';
+import s3 from './utils/s3';
 
 // load environment variables
 dotenv.config();
@@ -21,13 +22,35 @@ const redisClient = redis.createClient({
 // delete data
 const deleteData = async () => {
     try {
+        // delete all images from aws S3 bucket
+        const keys: { Key: string }[] = [];
+        const products = await Product.find();
+        if (products.length) {
+            products.forEach((product) => {
+                keys.push({ Key: product.s3Key });
+            });
+            await s3
+                .deleteObjects({ Bucket: 'sellbeez-products', Delete: { Objects: keys } })
+                .promise();
+            console.log('all images deleted');
+        }
+
+        // delete all data from redis
         redisClient.flushall('ASYNC', (err, succeeded) => {
             console.log(`redis collection cleared: ${succeeded}`);
         });
+
+        // delete all users
         await User.deleteMany();
+
+        // delete all refresh tokens
         await RefreshToken.deleteMany();
+
+        // delete all products
         await Product.deleteMany();
+
         console.log('data destroyed...');
+
         process.exit();
     } catch (error) {
         console.error(error);
