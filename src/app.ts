@@ -13,6 +13,7 @@ import xss from 'xss-clean';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
 import authRouter from './routes/auth.route';
+import collectionRouter from './routes/collection.route';
 import couponRouter from './routes/coupon.route';
 import productRouter from './routes/product.route';
 
@@ -68,6 +69,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use('/v1/auth', authRouter);
 app.use('/v1/products', productRouter);
 app.use('/v1/coupon', couponRouter);
+app.use('/v1/collections', collectionRouter);
 
 // handle errors
 app.use(errorHandler);
