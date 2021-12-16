@@ -4,6 +4,7 @@ import Collection from '../models/collection.model';
 export const createCollection = async (req: Request, res: Response) => {
     try {
         const collection = new Collection({
+            vendorId: req.user._id,
             ...req.body,
         });
 
