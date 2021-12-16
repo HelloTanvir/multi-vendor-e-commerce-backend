@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createCollection } from '../controllers/collection.controller';
+import { createCollection, getCollections } from '../controllers/collection.controller';
 import collectionValidator from '../middlewares/collectionValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
@@ -11,7 +11,7 @@ const collectionRouter = Router();
 collectionRouter
     .route('/')
     .post(collectionValidator, validationHandler, verifyAccessToken, createCollection)
-    .get();
+    .get(verifyAccessToken, getCollections);
 
 // URL: /v1/collections/1
 collectionRouter.route('/:collectionId').get().patch().delete();
