@@ -110,6 +110,7 @@ export const profileUpdate = async (req: Request, res: Response) => {
             country,
             postalCode,
             website,
+            shopName,
         } = req.body as UserData;
 
         if (email) req.user.email = email;
@@ -124,6 +125,12 @@ export const profileUpdate = async (req: Request, res: Response) => {
         if (website) req.user.website = website;
 
         await req.user.save();
+
+        // save shop name if user is verified
+        if (shopName && req.user.isVerified) {
+            req.user.shopName = shopName;
+            await req.user.save();
+        }
 
         res.status(200).json({
             data: req.user,
