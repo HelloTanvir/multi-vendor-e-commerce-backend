@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import Collection from '../models/collection.model';
+import Collection, { ICollection } from '../models/collection.model';
 
 export const createCollection = async (req: Request, res: Response) => {
     try {
@@ -63,6 +63,41 @@ export const getCollections = async (req: Request, res: Response) => {
             page,
             size,
             data: collections,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
+export const updateCollection = async (req: Request, res: Response) => {
+    try {
+        const { collectionId } = req.params as { collectionId: string };
+
+        const { name, productIds } = req.body as ICollection;
+
+        const collection = await Collection.findById(collectionId);
+
+        if (!collection) {
+            throw new createHttpError.BadRequest('Invalid collection id');
+        }
+
+        if (collection.vendorId !== req.user.id) {
+            throw new createHttpError.BadRequest('You are not the vendor of this collection');
+        }
+
+        if (name) collection.name = name;
+        if (productIds) collection.productIds = productIds;
+
+        await collection.save();
+
+        res.status(200).json({
+            data: collection,
         });
     } catch (error: any) {
         res.status(error.statusCode || 500).json({

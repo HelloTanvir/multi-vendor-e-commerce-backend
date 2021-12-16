@@ -3,10 +3,11 @@ import {
     createCollection,
     deleteCollection,
     getCollections,
+    getSingleCollection,
     // eslint-disable-next-line prettier/prettier
-    getSingleCollection
+    updateCollection
 } from '../controllers/collection.controller';
-import collectionValidator from '../middlewares/collectionValidator';
+import { collectionUpdateValidator, collectionValidator } from '../middlewares/collectionValidator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
 
@@ -23,7 +24,7 @@ collectionRouter
 collectionRouter
     .route('/:collectionId')
     .get(getSingleCollection)
-    .patch()
+    .patch(collectionUpdateValidator, validationHandler, verifyAccessToken, updateCollection)
     .delete(verifyAccessToken, deleteCollection);
 
 export default collectionRouter;
