@@ -13,6 +13,8 @@ export interface UserData {
     country: string;
     postalCode: number;
     website: string;
+    shopName: string;
+    eligible: boolean;
     isVerified: boolean;
 }
 
@@ -45,7 +47,14 @@ const UserSchema = new mongoose.Schema<IUser>(
 
         website: String,
 
+        shopName: String,
+
         isVerified: {
+            type: Boolean,
+            default: false,
+        },
+
+        eligible: {
             type: Boolean,
             default: false,
         },
@@ -63,8 +72,7 @@ UserSchema.pre('save', function () {
             this.apartment &&
             this.city &&
             this.country &&
-            this.postalCode &&
-            this.website
+            this.postalCode
     );
 });
 

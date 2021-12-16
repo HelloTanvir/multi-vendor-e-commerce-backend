@@ -56,4 +56,10 @@ export const profileUpdateValidator = [
         .isURL()
         .withMessage('Website should be an url')
         .trim(),
+
+    check('shopName')
+        .isLength({ min: 3 })
+        .optional({ nullable: true })
+        .withMessage('Shop name should contain at least 3 characters')
+        .trim(),
 ];
