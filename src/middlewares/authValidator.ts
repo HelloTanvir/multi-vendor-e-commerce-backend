@@ -1,4 +1,6 @@
 import { check } from 'express-validator';
+import createHttpError from 'http-errors';
+import User from '../models/user.model';
 
 export const loginValidator = [
     check('number').isLength({ min: 13, max: 13 }).withMessage('Please input your number').trim(),
@@ -61,5 +63,15 @@ export const profileUpdateValidator = [
         .isLength({ min: 3 })
         .optional({ nullable: true })
         .withMessage('Shop name should contain at least 3 characters')
-        .trim(),
+        .trim()
+        .custom(async (shopName) => {
+            try {
+                const user = await User.findOne({ shopName });
+                if (user) {
+                    throw createHttpError(400, 'Shop name is taken');
+                }
+            } catch (err: any) {
+                throw createHttpError(err.message);
+            }
+        }),
 ];

@@ -47,7 +47,10 @@ const UserSchema = new mongoose.Schema<IUser>(
 
         website: String,
 
-        shopName: String,
+        shopName: {
+            type: String,
+            unique: true,
+        },
 
         isVerified: {
             type: Boolean,
