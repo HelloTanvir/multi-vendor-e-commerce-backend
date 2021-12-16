@@ -24,6 +24,26 @@ export const createCollection = async (req: Request, res: Response) => {
     }
 };
 
+export const getSingleCollection = async (req: Request, res: Response) => {
+    try {
+        const { collectionId } = req.params as { collectionId: string };
+
+        const collection = await Collection.findById(collectionId);
+
+        res.status(200).json({
+            data: collection,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
 export const getCollections = async (req: Request, res: Response) => {
     try {
         let { page, size } = req.query as { page: string | number; size: string | number };
