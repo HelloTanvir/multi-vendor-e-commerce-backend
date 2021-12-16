@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
     createCollection,
+    deleteCollection,
     getCollections,
     // eslint-disable-next-line prettier/prettier
     getSingleCollection
@@ -19,6 +20,10 @@ collectionRouter
     .get(verifyAccessToken, getCollections);
 
 // URL: /v1/collections/1
-collectionRouter.route('/:collectionId').get(getSingleCollection).patch().delete();
+collectionRouter
+    .route('/:collectionId')
+    .get(getSingleCollection)
+    .patch()
+    .delete(verifyAccessToken, deleteCollection);
 
 export default collectionRouter;
