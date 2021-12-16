@@ -14,6 +14,7 @@ const CollectionSchema = new mongoose.Schema<ICollection>(
 
         productIds: {
             type: [mongoose.Types.ObjectId],
+            required: [true, 'Product(s) required'],
         },
     },
     { timestamps: true }
