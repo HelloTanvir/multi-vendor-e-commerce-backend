@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { IUser } from '../models/user.model';
 
 declare global {
@@ -37,7 +38,7 @@ declare global {
     namespace Express {
         interface Request {
             user: IUser;
-            userId: string;
+            userId: typeof mongoose.Types.ObjectId;
         }
     }
 }

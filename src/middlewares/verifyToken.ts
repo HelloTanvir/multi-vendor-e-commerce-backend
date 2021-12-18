@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import RefreshToken from '../models/refreshToken.model';
 import User from '../models/user.model';
 
@@ -43,7 +44,7 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
 
             // check existance of refresh token on database
             const savedRefreshToken = await RefreshToken.findOne({
-                userId: (payload as { id: string }).id,
+                userId: (payload as { id: typeof mongoose.Types.ObjectId }).id,
             });
 
             if (!savedRefreshToken) {
@@ -92,7 +93,7 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
 
         // check existance of refresh token on database
         const savedRefreshToken = await RefreshToken.findOne({
-            userId: (decoded as { id: string }).id,
+            userId: (decoded as { id: typeof mongoose.Types.ObjectId }).id,
         });
 
         if (!savedRefreshToken)
@@ -103,7 +104,7 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
         if (!isMatchRefreshToken)
             throw new createHttpError.Unauthorized('Not authorized to get access to this route');
 
-        req.userId = (decoded as { id: string }).id;
+        req.userId = (decoded as { id: typeof mongoose.Types.ObjectId }).id;
 
         next();
     } catch (err) {
