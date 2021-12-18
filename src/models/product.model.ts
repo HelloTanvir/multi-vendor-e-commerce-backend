@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 
 export interface IProduct extends Document {
-    vendorId: string;
+    vendorId: typeof mongoose.Types.ObjectId;
     image: string;
     s3Key: string;
     name: string;
@@ -15,7 +15,7 @@ export interface IProduct extends Document {
 const ProductSchema = new mongoose.Schema<IProduct>(
     {
         vendorId: {
-            type: String,
+            type: mongoose.Types.ObjectId,
             required: [true, 'vendor id is required'],
         },
 

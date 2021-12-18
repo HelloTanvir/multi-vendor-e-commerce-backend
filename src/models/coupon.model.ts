@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 
 export interface ICoupon extends Document {
-    vendorId: string;
+    vendorId: typeof mongoose.Types.ObjectId;
     name: string;
     amount: number;
     expiryDate: Date;
@@ -13,7 +13,7 @@ export interface ICoupon extends Document {
 const CouponSchema = new mongoose.Schema<ICoupon>(
     {
         vendorId: {
-            type: String,
+            type: mongoose.Types.ObjectId,
             required: [true, 'vendor id is required'],
         },
 
@@ -43,7 +43,7 @@ const CouponSchema = new mongoose.Schema<ICoupon>(
         },
 
         productIds: {
-            type: [String],
+            type: [mongoose.Types.ObjectId],
             required: [true, 'Products required'],
         },
     },

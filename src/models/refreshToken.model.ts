@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import mongoose, { Document } from 'mongoose';
 
 interface IRefreshToken extends Document {
-    userId: string;
+    userId: typeof mongoose.Types.ObjectId;
     refreshToken: string;
     matchRefreshToken: (reqRefreshToken: string) => Promise<boolean>;
 }
@@ -10,7 +10,7 @@ interface IRefreshToken extends Document {
 const TokenSchema = new mongoose.Schema<IRefreshToken>(
     {
         userId: {
-            type: String,
+            type: mongoose.Types.ObjectId,
             required: [true, 'user id is required'],
         },
 

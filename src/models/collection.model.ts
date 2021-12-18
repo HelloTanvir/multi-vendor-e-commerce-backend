@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 
 export interface ICollection extends Document {
-    vendorId: string;
+    vendorId: typeof mongoose.Types.ObjectId;
     name: string;
     productIds: string[];
 }
@@ -9,7 +9,7 @@ export interface ICollection extends Document {
 const CollectionSchema = new mongoose.Schema<ICollection>(
     {
         vendorId: {
-            type: String,
+            type: mongoose.Types.ObjectId,
             required: [true, 'vendor id is required'],
         },
 
