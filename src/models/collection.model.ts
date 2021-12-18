@@ -19,7 +19,7 @@ const CollectionSchema = new mongoose.Schema<ICollection>(
         },
 
         productIds: {
-            type: [mongoose.Types.ObjectId],
+            type: [String],
             required: [true, 'Product(s) required'],
         },
     },

@@ -43,8 +43,8 @@ const CouponSchema = new mongoose.Schema<ICoupon>(
         },
 
         productIds: {
-            type: [mongoose.Types.ObjectId],
-            required: [true, 'Products required'],
+            type: [String],
+            required: [true, 'Product(s) required'],
         },
     },
     { timestamps: true }
