@@ -40,4 +40,9 @@ productRouter
     )
     .delete(verifyAccessToken, deleteProduct);
 
+// for customer page, getting all products (not specific vendor's products)
+// URL: /v1/products/customer
+// URL: /v1/products/customer?page=1&size=10 (for pagination)
+productRouter.route('/customer').get(getProducts);
+
 export default productRouter;
