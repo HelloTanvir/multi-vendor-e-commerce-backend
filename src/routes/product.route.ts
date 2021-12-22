@@ -19,10 +19,10 @@ const productRouter = Router();
 productRouter
     .route('/')
     .post(
+        verifyAccessToken,
         imageUpload.single('image'),
         productValidator,
         validationHandler,
-        verifyAccessToken,
         createProduct
     )
     .get(verifyAccessToken, getProducts);
@@ -32,10 +32,10 @@ productRouter
     .route('/:productId')
     .get(getSingleProduct)
     .patch(
+        verifyAccessToken,
         imageUpload.single('image'),
         productUpdateValidator,
         validationHandler,
-        verifyAccessToken,
         updateProduct
     )
     .delete(verifyAccessToken, deleteProduct);
