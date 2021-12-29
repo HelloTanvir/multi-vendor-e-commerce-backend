@@ -55,6 +55,7 @@ app.use(
             'http://localhost:8080',
             'https://quirky-meninsky-8c97db.netlify.app',
             'https://sellbeez-git-desktop-knockoutez.vercel.app',
+            'https://sellbee-user.netlify.app',
         ],
         credentials: true,
     })
