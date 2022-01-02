@@ -12,10 +12,10 @@ import redis from 'redis';
 import xss from 'xss-clean';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
-import authRouter from './routes/auth.route';
 import collectionRouter from './routes/collection.route';
 import couponRouter from './routes/coupon.route';
 import productRouter from './routes/product.route';
+import vendorRouter from './routes/vendor.route';
 
 const app = express();
 
@@ -67,7 +67,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // mount routes
-app.use('/v1/auth', authRouter);
+app.use('/v1/vendor', vendorRouter);
 app.use('/v1/products', productRouter);
 app.use('/v1/coupon', couponRouter);
 app.use('/v1/collections', collectionRouter);

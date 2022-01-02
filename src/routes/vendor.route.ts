@@ -6,27 +6,27 @@ import {
     profileUpdate,
     // eslint-disable-next-line prettier/prettier
     verifyOtp
-} from '../controllers/auth.controller';
-import { loginValidator, profileUpdateValidator } from '../middlewares/authValidator';
+} from '../controllers/vendor.controller';
 import validationHandler from '../middlewares/validationHandler';
+import { loginValidator, profileUpdateValidator } from '../middlewares/vendor.validator';
 import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToken';
 
-const authRouter = Router();
+const vendorRouter = Router();
 
 // URL: /v1/auth/login
-authRouter.post('/login', loginValidator, validationHandler, login);
+vendorRouter.post('/login', loginValidator, validationHandler, login);
 
 // URL: /v1/auth/logout
-authRouter.delete('/logout', verifyRefreshToken, logout);
+vendorRouter.delete('/logout', verifyRefreshToken, logout);
 
 // URL: /v1/auth/refresh
-authRouter.get('/refresh', verifyRefreshToken, generateTokens);
+vendorRouter.get('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/auth/verify-otp
-authRouter.post('/verify-otp', verifyOtp);
+vendorRouter.post('/verify-otp', verifyOtp);
 
 // URL: /v1/auth/profile-update
-authRouter.patch(
+vendorRouter.patch(
     '/profile-update',
     profileUpdateValidator,
     validationHandler,
@@ -35,10 +35,10 @@ authRouter.patch(
 );
 
 // URL: /v1/auth/get-me
-authRouter.get('/get-me', verifyAccessToken, (req: Request, res: Response) => {
+vendorRouter.get('/get-me', verifyAccessToken, (req: Request, res: Response) => {
     res.status(200).json({
         data: req.user,
     });
 });
 
-export default authRouter;
+export default vendorRouter;
