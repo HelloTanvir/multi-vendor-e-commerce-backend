@@ -9,7 +9,7 @@ import {
     updateProduct
 } from '../controllers/product.controller';
 import imageUpload from '../middlewares/imageUpload';
-import { productUpdateValidator, productValidator } from '../middlewares/productValidator';
+import { productUpdateValidator, productValidator } from '../middlewares/product.validator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
 

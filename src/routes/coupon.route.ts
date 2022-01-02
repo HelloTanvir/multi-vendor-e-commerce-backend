@@ -6,7 +6,7 @@ import {
     // eslint-disable-next-line prettier/prettier
     getSingleCoupon
 } from '../controllers/coupon.controller';
-import couponValidator from '../middlewares/couponValidator';
+import couponValidator from '../middlewares/coupon.validator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
 

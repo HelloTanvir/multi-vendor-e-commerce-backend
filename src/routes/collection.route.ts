@@ -7,7 +7,11 @@ import {
     // eslint-disable-next-line prettier/prettier
     updateCollection
 } from '../controllers/collection.controller';
-import { collectionUpdateValidator, collectionValidator } from '../middlewares/collectionValidator';
+import {
+    collectionUpdateValidator,
+    // eslint-disable-next-line prettier/prettier
+    collectionValidator
+} from '../middlewares/collection.validator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
 
