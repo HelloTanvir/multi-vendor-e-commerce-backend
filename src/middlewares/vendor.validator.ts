@@ -1,6 +1,6 @@
 import { check } from 'express-validator';
 import createHttpError from 'http-errors';
-import User from '../models/user.model';
+import Vendor from '../models/vendor.model';
 
 export const loginValidator = [
     check('number').isLength({ min: 13, max: 13 }).withMessage('Please input your number').trim(),
@@ -66,8 +66,8 @@ export const profileUpdateValidator = [
         .trim()
         .custom(async (shopName) => {
             try {
-                const user = await User.findOne({ shopName });
-                if (user) {
+                const vendor = await Vendor.findOne({ shopName });
+                if (vendor) {
                     throw createHttpError(400, 'Shop name is taken');
                 }
             } catch (err: any) {

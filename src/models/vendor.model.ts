@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import mongoose, { Document } from 'mongoose';
 
-export interface UserData {
+export interface VendorData {
     email: string;
     number: string;
     firstName: string;
@@ -18,11 +18,11 @@ export interface UserData {
     isVerified: boolean;
 }
 
-export interface IUser extends UserData, Document {
+export interface IVendor extends VendorData, Document {
     getToken: (type: 'access token' | 'refresh token') => Promise<string>;
 }
 
-const UserSchema = new mongoose.Schema<IUser>(
+const VendorSchema = new mongoose.Schema<IVendor>(
     {
         email: {
             type: String,
@@ -65,7 +65,7 @@ const UserSchema = new mongoose.Schema<IUser>(
     { timestamps: true }
 );
 
-UserSchema.pre('save', function () {
+VendorSchema.pre('save', function () {
     this.isVerified = Boolean(
         this.email &&
             this.number &&
@@ -80,7 +80,7 @@ UserSchema.pre('save', function () {
 });
 
 // generate access token
-UserSchema.methods.getToken = function (type: 'access token' | 'refresh token'): Promise<any> {
+VendorSchema.methods.getToken = function (type: 'access token' | 'refresh token'): Promise<any> {
     let secret: string;
     let expiresIn: string;
 
@@ -103,6 +103,6 @@ UserSchema.methods.getToken = function (type: 'access token' | 'refresh token'):
     });
 };
 
-const User = mongoose.model('User', UserSchema);
+const Vendor = mongoose.model('Vendor', VendorSchema);
 
-export default User;
+export default Vendor;

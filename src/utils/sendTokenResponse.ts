@@ -1,8 +1,8 @@
 import { CookieOptions, Response } from 'express';
 import RefreshToken from '../models/refreshToken.model';
-import { IUser } from '../models/user.model';
+import { IVendor } from '../models/vendor.model';
 
-const sendTokenResponse = async (people: IUser, statusCode: number, res: Response) => {
+const sendTokenResponse = async (people: IVendor, statusCode: number, res: Response) => {
     try {
         const accessToken = await people.getToken('access token');
         const refreshToken = await people.getToken('refresh token');

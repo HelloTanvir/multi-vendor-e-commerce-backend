@@ -4,7 +4,7 @@ import redis from 'redis';
 // models
 import Product from './models/product.model';
 import RefreshToken from './models/refreshToken.model';
-import User from './models/user.model';
+import Vendor from './models/vendor.model';
 import s3 from './utils/s3';
 
 // load environment variables
@@ -41,7 +41,7 @@ const deleteData = async () => {
         });
 
         // delete all users
-        await User.deleteMany();
+        await Vendor.deleteMany();
 
         // delete all refresh tokens
         await RefreshToken.deleteMany();

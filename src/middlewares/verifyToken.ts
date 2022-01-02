@@ -3,7 +3,7 @@ import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import RefreshToken from '../models/refreshToken.model';
-import User from '../models/user.model';
+import Vendor from '../models/vendor.model';
 
 export const verifyAccessToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -44,7 +44,7 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
 
             // check existance of refresh token on database
             const savedRefreshToken = await RefreshToken.findOne({
-                userId: (payload as { id: typeof mongoose.Types.ObjectId }).id,
+                vendorId: (payload as { id: typeof mongoose.Types.ObjectId }).id,
             });
 
             if (!savedRefreshToken) {
@@ -54,17 +54,17 @@ export const verifyAccessToken = async (req: Request, res: Response, next: NextF
                 return;
             }
 
-            // find user associated with the access token
-            const user = await User.findById((payload as { id: string }).id);
+            // find vendor associated with the access token
+            const vendor = await Vendor.findById((payload as { id: string }).id);
 
-            if (!user) {
+            if (!vendor) {
                 next(
                     new createHttpError.Unauthorized('Not authorized to get access to this route')
                 );
                 return;
             }
 
-            req.user = user;
+            req.user = vendor;
             next();
         });
     } catch (err: any) {
@@ -93,7 +93,7 @@ export const verifyRefreshToken = async (req: Request, res: Response, next: Next
 
         // check existance of refresh token on database
         const savedRefreshToken = await RefreshToken.findOne({
-            userId: (decoded as { id: typeof mongoose.Types.ObjectId }).id,
+            vendorId: (decoded as { id: typeof mongoose.Types.ObjectId }).id,
         });
 
         if (!savedRefreshToken)

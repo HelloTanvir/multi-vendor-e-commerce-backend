@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IUser } from '../models/user.model';
+import { IVendor } from '../models/vendor.model';
 
 declare global {
     namespace NodeJS {
@@ -37,7 +37,7 @@ declare global {
 
     namespace Express {
         interface Request {
-            user: IUser;
+            user: IVendor;
             userId: typeof mongoose.Types.ObjectId;
         }
     }

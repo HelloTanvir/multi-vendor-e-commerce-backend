@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { RedisClient } from 'redis';
 import RefreshToken from '../models/refreshToken.model';
-import User, { UserData } from '../models/user.model';
+import Vendor, { VendorData } from '../models/vendor.model';
 import sendOTPResponse from '../utils/sendOTPResponse';
 import sendTokenResponse from '../utils/sendTokenResponse';
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { number } = req.body as UserData;
+        const { number } = req.body as VendorData;
 
         await sendOTPResponse(number, 200, res);
     } catch (error: any) {
@@ -66,20 +66,20 @@ export const verifyOtp = async (req: Request, res: Response) => {
                 throw new createHttpError.BadRequest('Incorrect OTP');
             }
 
-            const registeredUser = await User.findOne({ number });
+            const registeredVendor = await Vendor.findOne({ number });
 
-            if (registeredUser) {
+            if (registeredVendor) {
                 // send access and refresh token to user
-                await sendTokenResponse(registeredUser, 200, res);
+                await sendTokenResponse(registeredVendor, 200, res);
                 return;
             }
 
             // create a new user
-            const newUser = new User({
+            const newVendor = new Vendor({
                 number,
             });
 
-            const user = await newUser.save();
+            const user = await newVendor.save();
 
             if (user) {
                 // send access and refresh token to user
@@ -111,7 +111,7 @@ export const profileUpdate = async (req: Request, res: Response) => {
             postalCode,
             website,
             shopName,
-        } = req.body as UserData;
+        } = req.body as VendorData;
 
         if (email) req.user.email = email;
         if (number) req.user.number = number;
@@ -148,7 +148,7 @@ export const profileUpdate = async (req: Request, res: Response) => {
 
 export const generateTokens = async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.userId);
+        const user = await Vendor.findById(req.userId);
 
         if (!user)
             throw new createHttpError.Unauthorized('Not authorized to get access to this route');
