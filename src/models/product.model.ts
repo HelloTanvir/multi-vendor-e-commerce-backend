@@ -5,9 +5,9 @@ export interface IProduct extends Document {
     image: string;
     s3Key: string;
     name: string;
-    regularPrice: string;
-    salesPrice: string;
-    inventory: string;
+    regularPrice: number;
+    salesPrice: number;
+    inventory: number;
     description: string;
     status: boolean;
 }
@@ -35,17 +35,17 @@ const ProductSchema = new mongoose.Schema<IProduct>(
         },
 
         regularPrice: {
-            type: String,
+            type: Number,
             required: [true, 'regular price is required'],
         },
 
         salesPrice: {
-            type: String,
+            type: Number,
             required: [true, 'sales price is required'],
         },
 
         inventory: {
-            type: String,
+            type: Number,
             required: [true, 'product inventory is required'],
         },
 
