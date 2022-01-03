@@ -14,6 +14,7 @@ import xss from 'xss-clean';
 import errorHandler from './middlewares/errorHandler';
 import collectionRouter from './routes/collection.route';
 import couponRouter from './routes/coupon.route';
+import customerRouter from './routes/customer.route';
 import productRouter from './routes/product.route';
 import vendorRouter from './routes/vendor.route';
 
@@ -68,6 +69,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // mount routes
 app.use('/v1/vendor', vendorRouter);
+app.use('/v1/customer', customerRouter);
 app.use('/v1/products', productRouter);
 app.use('/v1/coupon', couponRouter);
 app.use('/v1/collections', collectionRouter);
