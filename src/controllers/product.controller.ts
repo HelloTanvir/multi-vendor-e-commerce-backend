@@ -183,7 +183,15 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 export const getProductsForCustomer = async (req: Request, res: Response) => {
     try {
-        let { page, size } = req.query as { page: string | number; size: string | number };
+        let { page, size } = req.query as {
+            page: string | number;
+            size: string | number;
+        };
+
+        const { priceStart, priceEnd } = req.query as {
+            priceStart: string;
+            priceEnd: string;
+        };
 
         if (!page) page = 1;
         if (!size) size = 10;
@@ -191,7 +199,15 @@ export const getProductsForCustomer = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const products = await Product.find().limit(limit).skip(skip);
+        let products: any;
+
+        if (priceStart && priceEnd) {
+            products = await Product.find({ salesPrice: { $gte: +priceStart, $lte: +priceEnd } })
+                .limit(limit)
+                .skip(skip);
+        } else {
+            products = await Product.find().limit(limit).skip(skip);
+        }
 
         res.status(200).json({
             page,

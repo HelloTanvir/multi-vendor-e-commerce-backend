@@ -18,6 +18,7 @@ const productRouter = Router();
 // for customer page, getting all products (not specific vendor's products)
 // URL: /v1/products/customer
 // URL: /v1/products/customer?page=1&size=10 (for pagination)
+// URL: /v1/products/customer?priceStart=100&priceEnd=1000 (for filtering)
 productRouter.route('/customer').get(getProductsForCustomer);
 
 // URL: /v1/products
