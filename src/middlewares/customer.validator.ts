@@ -3,7 +3,20 @@ import createHttpError from 'http-errors';
 import Customer from '../models/customer.model';
 
 export const loginValidator = [
-    check('email').isEmail().withMessage('Invalid email address').trim(),
+    check('email')
+        .isEmail()
+        .withMessage('Invalid email address')
+        .trim()
+        .custom(async (value) => {
+            try {
+                const customer = await Customer.findOne({ email: value });
+                if (!customer) {
+                    throw new createHttpError.BadRequest('You are not signed up with this email');
+                }
+            } catch (err: any) {
+                throw new createHttpError.BadRequest(err.message);
+            }
+        }),
 
     check('password')
         .isLength({ min: 6 })
@@ -19,7 +32,7 @@ export const signupValidator = [
             try {
                 const customer = await Customer.findOne({ email: value });
                 if (customer) {
-                    throw createHttpError(400, 'This email is already in use');
+                    throw new createHttpError.BadRequest('This email is already in use');
                 }
             } catch (err: any) {
                 throw new createHttpError.BadRequest(err.message);
