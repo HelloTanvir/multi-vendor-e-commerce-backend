@@ -13,19 +13,19 @@ import { verifyAccessToken, verifyRefreshToken } from '../middlewares/verifyToke
 
 const vendorRouter = Router();
 
-// URL: /v1/auth/login
+// URL: /v1/vendor/login
 vendorRouter.post('/login', loginValidator, validationHandler, login);
 
-// URL: /v1/auth/logout
+// URL: /v1/vendor/logout
 vendorRouter.delete('/logout', verifyRefreshToken, logout);
 
-// URL: /v1/auth/refresh
+// URL: /v1/vendor/refresh
 vendorRouter.get('/refresh', verifyRefreshToken, generateTokens);
 
-// URL: /v1/auth/verify-otp
+// URL: /v1/vendor/verify-otp
 vendorRouter.post('/verify-otp', verifyOtp);
 
-// URL: /v1/auth/profile-update
+// URL: /v1/vendor/profile-update
 vendorRouter.patch(
     '/profile-update',
     profileUpdateValidator,
@@ -34,7 +34,7 @@ vendorRouter.patch(
     profileUpdate
 );
 
-// URL: /v1/auth/get-me
+// URL: /v1/vendor/get-me
 vendorRouter.get('/get-me', verifyAccessToken, (req: Request, res: Response) => {
     res.status(200).json({
         data: req.user,
