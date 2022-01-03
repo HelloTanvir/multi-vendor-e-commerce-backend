@@ -74,3 +74,22 @@ export const logout = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const generateTokens = async (req: Request, res: Response) => {
+    try {
+        const customer = await Customer.findById(req.userId);
+
+        if (!customer)
+            throw new createHttpError.Unauthorized('Not authorized to get access to this route');
+
+        sendTokenResponse(customer, 200, res);
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
