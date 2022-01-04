@@ -19,7 +19,7 @@ customerRouter.delete('/logout', verifyRefreshToken, logout);
 customerRouter.get('/refresh', verifyRefreshToken, generateTokens);
 
 // URL: /v1/customer/get-me
-customerRouter.get('/get-me', verifyAccessToken, (req: Request, res: Response) => {
+customerRouter.get('/get-me', verifyAccessToken('customer'), (req: Request, res: Response) => {
     res.status(200).json({
         data: req.user,
     });

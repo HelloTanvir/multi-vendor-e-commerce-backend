@@ -30,12 +30,12 @@ vendorRouter.patch(
     '/profile-update',
     profileUpdateValidator,
     validationHandler,
-    verifyAccessToken,
+    verifyAccessToken('vendor'),
     profileUpdate
 );
 
 // URL: /v1/vendor/get-me
-vendorRouter.get('/get-me', verifyAccessToken, (req: Request, res: Response) => {
+vendorRouter.get('/get-me', verifyAccessToken('vendor'), (req: Request, res: Response) => {
     res.status(200).json({
         data: req.user,
     });

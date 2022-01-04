@@ -15,10 +15,13 @@ const couponRouter = Router();
 // URL: /v1/coupon
 couponRouter
     .route('/')
-    .post(couponValidator, validationHandler, verifyAccessToken, createCoupon)
-    .get(verifyAccessToken, getCoupons);
+    .post(couponValidator, validationHandler, verifyAccessToken('vendor'), createCoupon)
+    .get(verifyAccessToken('vendor'), getCoupons);
 
 // URL: /v1/coupon/1
-couponRouter.route('/:couponId').get(getSingleCoupon).delete(verifyAccessToken, deleteCoupon);
+couponRouter
+    .route('/:couponId')
+    .get(getSingleCoupon)
+    .delete(verifyAccessToken('vendor'), deleteCoupon);
 
 export default couponRouter;

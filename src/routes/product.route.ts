@@ -26,25 +26,25 @@ productRouter.route('/customer').get(getProductsForCustomer);
 productRouter
     .route('/')
     .post(
-        verifyAccessToken,
+        verifyAccessToken('vendor'),
         imageUpload.single('image'),
         productValidator,
         validationHandler,
         createProduct
     )
-    .get(verifyAccessToken, getProducts);
+    .get(verifyAccessToken('vendor'), getProducts);
 
 // URL: /v1/products/1
 productRouter
     .route('/:productId')
     .get(getSingleProduct)
     .patch(
-        verifyAccessToken,
+        verifyAccessToken('vendor'),
         imageUpload.single('image'),
         productUpdateValidator,
         validationHandler,
         updateProduct
     )
-    .delete(verifyAccessToken, deleteProduct);
+    .delete(verifyAccessToken('vendor'), deleteProduct);
 
 export default productRouter;

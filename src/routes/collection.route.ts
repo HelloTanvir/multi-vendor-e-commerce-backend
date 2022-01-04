@@ -21,14 +21,19 @@ const collectionRouter = Router();
 // URL: /v1/collections?page=1&size=10 (for pagination)
 collectionRouter
     .route('/')
-    .post(collectionValidator, validationHandler, verifyAccessToken, createCollection)
-    .get(verifyAccessToken, getCollections);
+    .post(collectionValidator, validationHandler, verifyAccessToken('vendor'), createCollection)
+    .get(verifyAccessToken('vendor'), getCollections);
 
 // URL: /v1/collections/1
 collectionRouter
     .route('/:collectionId')
     .get(getSingleCollection)
-    .patch(collectionUpdateValidator, validationHandler, verifyAccessToken, updateCollection)
-    .delete(verifyAccessToken, deleteCollection);
+    .patch(
+        collectionUpdateValidator,
+        validationHandler,
+        verifyAccessToken('vendor'),
+        updateCollection
+    )
+    .delete(verifyAccessToken('vendor'), deleteCollection);
 
 export default collectionRouter;
