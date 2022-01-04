@@ -3,8 +3,10 @@ import mongoose, { Document } from 'mongoose';
 export interface IOrder extends Document {
     vendorId: typeof mongoose.Types.ObjectId;
     customerId: typeof mongoose.Types.ObjectId;
-    productId: typeof mongoose.Types.ObjectId;
-    quantity: number;
+    products: {
+        productId: typeof mongoose.Types.ObjectId;
+        quantity: number;
+    }[];
     status: string;
 }
 
@@ -20,14 +22,20 @@ const OrderSchema = new mongoose.Schema<IOrder>(
             required: [true, 'customer id is required'],
         },
 
-        productId: {
-            type: mongoose.Types.ObjectId,
-            required: [true, 'product id is required'],
-        },
-
-        quantity: {
-            type: Number,
-            required: [true, 'product quantity is required'],
+        products: {
+            type: [
+                {
+                    productId: {
+                        type: mongoose.Types.ObjectId,
+                        required: [true, 'product id is required'],
+                    },
+                    quantity: {
+                        type: Number,
+                        required: [true, 'product quantity is required'],
+                    },
+                },
+            ],
+            required: [true, 'products are required'],
         },
 
         status: {
