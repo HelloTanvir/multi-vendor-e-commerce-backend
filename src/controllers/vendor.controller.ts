@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { RedisClient } from 'redis';
 import RefreshToken from '../models/refreshToken.model';
-import Vendor, { VendorData } from '../models/vendor.model';
+import Vendor, { IVendor, VendorData } from '../models/vendor.model';
 import sendOTPResponse from '../utils/sendOTPResponse';
 import sendTokenResponse from '../utils/sendTokenResponse';
 
@@ -113,22 +113,22 @@ export const profileUpdate = async (req: Request, res: Response) => {
             shopName,
         } = req.body as VendorData;
 
-        if (email) req.user.email = email;
-        if (number) req.user.number = number;
-        if (firstName) req.user.firstName = firstName;
-        if (lastName) req.user.lastName = lastName;
-        if (address) req.user.address = address;
-        if (apartment) req.user.apartment = apartment;
-        if (city) req.user.city = city;
-        if (country) req.user.country = country;
-        if (postalCode) req.user.postalCode = postalCode;
-        if (website) req.user.website = website;
+        if (email) (req.user as IVendor).email = email;
+        if (number) (req.user as IVendor).number = number;
+        if (firstName) (req.user as IVendor).firstName = firstName;
+        if (lastName) (req.user as IVendor).lastName = lastName;
+        if (address) (req.user as IVendor).address = address;
+        if (apartment) (req.user as IVendor).apartment = apartment;
+        if (city) (req.user as IVendor).city = city;
+        if (country) (req.user as IVendor).country = country;
+        if (postalCode) (req.user as IVendor).postalCode = postalCode;
+        if (website) (req.user as IVendor).website = website;
 
         await req.user.save();
 
         // save shop name if user is verified
-        if (shopName && req.user.isVerified) {
-            req.user.shopName = shopName;
+        if (shopName && (req.user as IVendor).isVerified) {
+            (req.user as IVendor).shopName = shopName;
             await req.user.save();
         }
 
