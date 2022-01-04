@@ -199,14 +199,12 @@ export const getProductsForCustomer = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        let products: any;
+        let products = await Product.find().limit(limit).skip(skip);
 
         if (priceStart && priceEnd) {
-            products = await Product.find({ salesPrice: { $gte: +priceStart, $lte: +priceEnd } })
-                .limit(limit)
-                .skip(skip);
-        } else {
-            products = await Product.find().limit(limit).skip(skip);
+            products = products.filter(
+                (product) => product.salesPrice >= +priceStart && product.salesPrice <= +priceEnd
+            );
         }
 
         res.status(200).json({
