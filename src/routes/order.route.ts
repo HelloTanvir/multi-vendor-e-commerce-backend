@@ -16,7 +16,7 @@ const orderRouter = Router();
 orderRouter
     .route('/')
     .post(orderValidator, validationHandler, verifyAccessToken('customer'), createOrder)
-    .get(verifyAccessToken('vendor'), getOrders);
+    .get(verifyAccessToken('customer'), getOrders);
 
 // URL: /v1/order/1
 orderRouter.route('/:orderId').get(getSingleOrder).patch(verifyAccessToken('vendor'), updateOrder);
