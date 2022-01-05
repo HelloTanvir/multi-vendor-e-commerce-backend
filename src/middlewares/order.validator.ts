@@ -1,43 +1,40 @@
 import { check } from 'express-validator';
-import createHttpError from 'http-errors';
 
 export const orderValidator = [
-    check('products')
-        .isArray({ min: 1 })
-        .withMessage('array of products is required')
-        .custom(
-            (
-                products: {
-                    vendorId: string;
-                    productId: string;
-                    quantity: number;
-                }[]
-            ) => {
-                let errMsg = '';
+    check('products').isArray({ min: 1 }).withMessage('array of products is required'),
+    // .custom(
+    //     (
+    //         products: {
+    //             vendorId: string;
+    //             productId: string;
+    //             quantity: number;
+    //         }[]
+    //     ) => {
+    //         let errMsg = '';
 
-                products.forEach((product) => {
-                    if (!product.productId) {
-                        errMsg = 'product id is required';
-                    }
+    //         products.forEach((product) => {
+    //             if (!product.productId) {
+    //                 errMsg = 'product id is required';
+    //             }
 
-                    if (!product.quantity) {
-                        errMsg = 'product quantity is required';
-                    }
+    //             if (!product.quantity) {
+    //                 errMsg = 'product quantity is required';
+    //             }
 
-                    if (Number.isNaN(+product.quantity)) {
-                        errMsg = 'product quantity should be a number';
-                    }
+    //             if (Number.isNaN(+product.quantity)) {
+    //                 errMsg = 'product quantity should be a number';
+    //             }
 
-                    if (!product.vendorId) {
-                        errMsg = 'vendor id is required';
-                    }
-                });
+    //             if (!product.vendorId) {
+    //                 errMsg = 'vendor id is required';
+    //             }
+    //         });
 
-                if (errMsg) {
-                    throw new createHttpError.BadRequest(errMsg);
-                }
-            }
-        ),
+    //         if (errMsg) {
+    //             throw new createHttpError.BadRequest(errMsg);
+    //         }
+    //     }
+    // ),
 ];
 
 export const orderUpdateValidator = [
