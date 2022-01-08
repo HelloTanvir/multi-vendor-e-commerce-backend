@@ -1,9 +1,14 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Coupon from '../models/coupon.model';
+import { IVendor } from '../models/vendor.model';
 
 export const createCoupon = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const coupon = new Coupon({
             vendorId: req.user._id,
             ...req.body,
@@ -47,6 +52,10 @@ export const getSingleCoupon = async (req: Request, res: Response) => {
 
 export const getCoupons = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         let { page, size } = req.query as { page: string | number; size: string | number };
 
         if (!page) page = 1;
@@ -75,6 +84,10 @@ export const getCoupons = async (req: Request, res: Response) => {
 
 export const deleteCoupon = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const { couponId } = req.params as { couponId: string };
 
         const coupon = await Coupon.findById(couponId);

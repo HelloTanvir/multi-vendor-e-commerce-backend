@@ -1,9 +1,14 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Collection, { ICollection } from '../models/collection.model';
+import { IVendor } from '../models/vendor.model';
 
 export const createCollection = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const collection = new Collection({
             vendorId: req.user._id,
             ...req.body,
@@ -47,6 +52,10 @@ export const getSingleCollection = async (req: Request, res: Response) => {
 
 export const getCollections = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         let { page, size } = req.query as { page: string | number; size: string | number };
 
         if (!page) page = 1;
@@ -77,6 +86,10 @@ export const getCollections = async (req: Request, res: Response) => {
 
 export const updateCollection = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const { collectionId } = req.params as { collectionId: string };
 
         const { name, productIds } = req.body as ICollection;
@@ -112,6 +125,10 @@ export const updateCollection = async (req: Request, res: Response) => {
 
 export const deleteCollection = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const { collectionId } = req.params as { collectionId: string };
 
         const collection = await Collection.findById(collectionId);

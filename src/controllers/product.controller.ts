@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Product, { IProduct } from '../models/product.model';
+import { IVendor } from '../models/vendor.model';
 import s3 from '../utils/s3';
 
 export const createProduct = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         if (!req.file) {
             throw new createHttpError.BadRequest('Product image is required');
         }
@@ -54,6 +59,10 @@ export const getSingleProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         let { page, size } = req.query as { page: string | number; size: string | number };
 
         if (!page) page = 1;
@@ -82,6 +91,10 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const { productId } = req.params as { productId: string };
 
         const { name, regularPrice, salesPrice, inventory, description, status } =
@@ -142,6 +155,10 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
+        if (!(req.user as IVendor).isVerified) {
+            throw new createHttpError.BadRequest('You are not verified');
+        }
+
         const { productId } = req.params as { productId: string };
 
         const product = await Product.findById(productId);
