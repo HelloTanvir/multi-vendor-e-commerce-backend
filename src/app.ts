@@ -12,6 +12,7 @@ import redis from 'redis';
 import xss from 'xss-clean';
 // internal imports
 import errorHandler from './middlewares/errorHandler';
+import checkoutRouter from './routes/checkout.route';
 import collectionRouter from './routes/collection.route';
 import couponRouter from './routes/coupon.route';
 import customerRouter from './routes/customer.route';
@@ -75,6 +76,7 @@ app.use('/v1/products', productRouter);
 app.use('/v1/coupon', couponRouter);
 app.use('/v1/collections', collectionRouter);
 app.use('/v1/order', orderRouter);
+app.use('/v1/checkout', checkoutRouter);
 
 // handle errors
 app.use(errorHandler);
