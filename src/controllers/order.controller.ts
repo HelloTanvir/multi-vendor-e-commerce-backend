@@ -45,7 +45,7 @@ export const getSingleOrder = async (req: Request, res: Response) => {
     }
 };
 
-export const getOrders = async (req: Request, res: Response) => {
+export const getOrdersForCustomer = async (req: Request, res: Response) => {
     try {
         let { page, size } = req.query as { page: string | number; size: string | number };
 
@@ -55,7 +55,37 @@ export const getOrders = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const orders = await Order.find().limit(limit).skip(skip);
+        const orders = await Order.find({ customerId: req.user.id }).limit(limit).skip(skip);
+
+        res.status(200).json({
+            page,
+            size,
+            data: orders,
+        });
+    } catch (error: any) {
+        res.status(error.statusCode || 500).json({
+            errors: {
+                common: {
+                    msg: error.message || 'Server error occured',
+                },
+            },
+        });
+    }
+};
+
+export const getOrdersForVendor = async (req: Request, res: Response) => {
+    try {
+        let { page, size } = req.query as { page: string | number; size: string | number };
+
+        if (!page) page = 1;
+        if (!size) size = 10;
+
+        const limit = +size;
+        const skip = (+page - 1) * +size;
+
+        const orders = await Order.find({ 'products.vendorId': req.user.id })
+            .limit(limit)
+            .skip(skip);
 
         res.status(200).json({
             page,
