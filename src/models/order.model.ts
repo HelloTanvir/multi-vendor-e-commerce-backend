@@ -8,6 +8,7 @@ export interface IOrder extends Document {
         quantity: number;
     }[];
     status: string;
+    isCheckedOut: boolean;
 }
 
 const OrderSchema = new mongoose.Schema<IOrder>(
@@ -41,6 +42,12 @@ const OrderSchema = new mongoose.Schema<IOrder>(
             type: String,
             enum: ['pending', 'delivered', 'cancelled'],
             default: 'pending',
+        },
+
+        isCheckedOut: {
+            type: Boolean,
+            default: false,
+            select: false,
         },
     },
     { timestamps: true }
