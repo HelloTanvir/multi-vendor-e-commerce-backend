@@ -47,10 +47,7 @@ const VendorSchema = new mongoose.Schema<IVendor>(
 
         website: String,
 
-        shopName: {
-            type: String,
-            unique: true,
-        },
+        shopName: String,
 
         isVerified: {
             type: Boolean,

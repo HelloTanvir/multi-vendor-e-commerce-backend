@@ -128,7 +128,22 @@ export const profileUpdate = async (req: Request, res: Response) => {
 
         // save shop name if user is verified
         if (shopName && (req.user as IVendor).isVerified) {
+            const isShopNameExist = await Vendor.findOne({ shopName });
+
+            if (isShopNameExist) {
+                res.status(400).json({
+                    errors: {
+                        common: {
+                            msg: 'Shop name should be unique',
+                        },
+                    },
+                });
+
+                return;
+            }
+
             (req.user as IVendor).shopName = shopName;
+
             await req.user.save();
         }
 
