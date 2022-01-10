@@ -27,7 +27,7 @@ const OrderSchema = new mongoose.Schema<IOrder>(
             type: [
                 {
                     product: {
-                        type: Product,
+                        type: Product.schema,
                         required: [true, 'product id is required'],
                     },
                     quantity: {
