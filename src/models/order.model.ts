@@ -1,14 +1,14 @@
 import mongoose, { Document } from 'mongoose';
+import Product from './product.model';
 
 export interface IOrder extends Document {
     customerId: typeof mongoose.Types.ObjectId;
+    vendorId: typeof mongoose.Types.ObjectId;
     products: {
-        vendorId: typeof mongoose.Types.ObjectId;
-        productId: typeof mongoose.Types.ObjectId;
+        product: typeof Product;
         quantity: number;
     }[];
-    status: string;
-    isCheckedOut: boolean;
+    orderStatus: string;
 }
 
 const OrderSchema = new mongoose.Schema<IOrder>(
@@ -18,15 +18,16 @@ const OrderSchema = new mongoose.Schema<IOrder>(
             required: [true, 'customer id is required'],
         },
 
+        vendorId: {
+            type: mongoose.Types.ObjectId,
+            required: [true, 'vendor id is required'],
+        },
+
         products: {
             type: [
                 {
-                    vendorId: {
-                        type: mongoose.Types.ObjectId,
-                        required: [true, 'vendor id is required'],
-                    },
-                    productId: {
-                        type: mongoose.Types.ObjectId,
+                    product: {
+                        type: Product,
                         required: [true, 'product id is required'],
                     },
                     quantity: {
@@ -38,16 +39,10 @@ const OrderSchema = new mongoose.Schema<IOrder>(
             required: [true, 'products are required'],
         },
 
-        status: {
+        orderStatus: {
             type: String,
             enum: ['pending', 'delivered', 'cancelled'],
             default: 'pending',
-        },
-
-        isCheckedOut: {
-            type: Boolean,
-            default: false,
-            select: false,
         },
     },
     { timestamps: true }
