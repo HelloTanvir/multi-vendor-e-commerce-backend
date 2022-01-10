@@ -21,7 +21,7 @@ export const createOrder = async (req: Request, res: Response) => {
                     // const savedProduct = await Product.findById(p.productId);
                     ({
                         product: p.productId,
-                        quantity: p.quantity,
+                        quantity: +p.quantity,
                     })
                 );
 
