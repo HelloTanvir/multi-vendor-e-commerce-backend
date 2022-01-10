@@ -1,6 +1,10 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import redis from 'redis';
+import Collection from './models/collection.model';
+import Coupon from './models/coupon.model';
+import Customer from './models/customer.model';
+import Order from './models/order.model';
 // models
 import Product from './models/product.model';
 import RefreshToken from './models/refreshToken.model';
@@ -48,6 +52,18 @@ const deleteData = async () => {
 
         // delete all products
         await Product.deleteMany();
+
+        // delete all collection
+        await Collection.deleteMany();
+
+        // delete all coupon
+        await Coupon.deleteMany();
+
+        // delete all customer
+        await Customer.deleteMany();
+
+        // delete all order
+        await Order.deleteMany();
 
         console.log('data destroyed...');
 
