@@ -18,7 +18,6 @@ const sendTokenResponse = async (
         if (savedRefreshToken) {
             savedRefreshToken.refreshToken = refreshToken;
             await savedRefreshToken.save();
-            // await savedRefreshToken.updateOne({ refreshToken });
         } else {
             const newRefreshToken = new RefreshToken({ userId, refreshToken });
             await newRefreshToken.save();

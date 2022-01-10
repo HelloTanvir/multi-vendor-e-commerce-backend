@@ -9,8 +9,6 @@ const sendOTPResponse = async (number: string, statusCode: number, res: Response
             .generate(4, { digits: true, alphabets: false, upperCase: false, specialChars: false })
             .toString();
 
-        console.log(generatedOtp);
-
         const { redisClient } = global as any;
 
         (redisClient as RedisClient).setex(number, +process.env.OTP_EXPIRE, `${generatedOtp}`);
@@ -30,8 +28,6 @@ const sendOTPResponse = async (number: string, statusCode: number, res: Response
                 },
             }
         );
-
-        // const otpResponse = true;
 
         if (otpResponse) {
             res.status(statusCode).json({
