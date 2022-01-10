@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Order, { IOrder } from '../models/order.model';
-import Product from '../models/product.model';
 
 export const createOrder = async (req: Request, res: Response) => {
     try {
@@ -18,13 +17,13 @@ export const createOrder = async (req: Request, res: Response) => {
         vendorIds.forEach(async (vendorId) => {
             const separatedProducts = products
                 .filter((p) => p.vendorId === vendorId)
-                .map(async (p) => {
-                    const savedProduct = await Product.findById(p.productId);
-                    return {
-                        product: savedProduct,
+                .map(async (p) =>
+                    // const savedProduct = await Product.findById(p.productId);
+                    ({
+                        product: p.productId,
                         quantity: p.quantity,
-                    };
-                });
+                    })
+                );
 
             const order = new Order({
                 customerId: req.user._id,
