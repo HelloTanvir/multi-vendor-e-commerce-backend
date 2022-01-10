@@ -1,18 +1,42 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import Order, { IOrder } from '../models/order.model';
+import Product from '../models/product.model';
 
 export const createOrder = async (req: Request, res: Response) => {
     try {
-        const order = new Order({
-            customerId: req.user._id,
-            ...req.body,
+        const { products } = req.body as {
+            products: {
+                vendorId: string;
+                productId: string;
+                quantity: number;
+            }[];
+        };
+
+        const vendorIds = [...new Set(products.map((p) => p.vendorId))];
+
+        vendorIds.forEach(async (vendorId) => {
+            const separatedProducts = products
+                .filter((p) => p.vendorId === vendorId)
+                .map(async (p) => {
+                    const savedProduct = await Product.findById(p.productId);
+                    return {
+                        product: savedProduct,
+                        quantity: p.quantity,
+                    };
+                });
+
+            const order = new Order({
+                customerId: req.user._id,
+                vendorId,
+                products: separatedProducts,
+            });
+
+            await order.save();
         });
 
-        await order.save();
-
         res.status(201).json({
-            data: order,
+            meessage: 'order created',
         });
     } catch (error: any) {
         res.status(error.statusCode || 500).json({
@@ -83,9 +107,7 @@ export const getOrdersForVendor = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const orders = await Order.find({ 'products.vendorId': req.user.id })
-            .limit(limit)
-            .skip(skip);
+        const orders = await Order.find({ vendorId: req.user.id }).limit(limit).skip(skip);
 
         res.status(200).json({
             page,
@@ -106,7 +128,7 @@ export const getOrdersForVendor = async (req: Request, res: Response) => {
 export const updateOrder = async (req: Request, res: Response) => {
     try {
         const { orderId } = req.params as { orderId: string };
-        const { status } = req.body as IOrder;
+        const { orderStatus } = req.body as IOrder;
 
         const order = await Order.findById(orderId);
 
@@ -114,7 +136,7 @@ export const updateOrder = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid order id');
         }
 
-        if (status) order.status = status;
+        if (orderStatus) order.orderStatus = orderStatus;
 
         await order.save();
 
