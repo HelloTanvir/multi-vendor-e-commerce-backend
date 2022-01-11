@@ -17,13 +17,10 @@ export const createOrder = async (req: Request, res: Response) => {
         vendorIds.forEach(async (vendorId) => {
             const separatedProducts = products
                 .filter((p) => p.vendorId === vendorId)
-                .map(async (p) =>
-                    // const savedProduct = await Product.findById(p.productId);
-                    ({
-                        product: p.productId,
-                        quantity: +p.quantity,
-                    })
-                );
+                .map((p) => ({
+                    product: p.productId,
+                    quantity: +p.quantity,
+                }));
 
             const order = new Order({
                 customerId: req.user._id,
@@ -52,7 +49,7 @@ export const getSingleOrder = async (req: Request, res: Response) => {
     try {
         const { orderId } = req.params as { orderId: string };
 
-        const order = await Order.findById(orderId);
+        const order = await Order.findById(orderId).populate('products.product');
 
         res.status(200).json({
             data: order,
@@ -78,7 +75,10 @@ export const getOrdersForCustomer = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const orders = await Order.find({ customerId: req.user.id }).limit(limit).skip(skip);
+        const orders = await Order.find({ customerId: req.user.id })
+            .limit(limit)
+            .skip(skip)
+            .populate('products.product');
 
         res.status(200).json({
             page,
@@ -106,7 +106,10 @@ export const getOrdersForVendor = async (req: Request, res: Response) => {
         const limit = +size;
         const skip = (+page - 1) * +size;
 
-        const orders = await Order.find({ vendorId: req.user.id }).limit(limit).skip(skip);
+        const orders = await Order.find({ vendorId: req.user.id })
+            .limit(limit)
+            .skip(skip)
+            .populate('products.product');
 
         res.status(200).json({
             page,
