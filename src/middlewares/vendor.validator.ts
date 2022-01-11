@@ -51,13 +51,13 @@ export const profileUpdateValidator = [
         .withMessage('Postal Code should be number')
         .trim(),
 
-    check('website')
-        .isLength({ min: 6 })
-        .optional({ nullable: true })
-        .withMessage('Website should contain at least 6 characters')
-        .isURL()
-        .withMessage('Website should be an url')
-        .trim(),
+    // check('website')
+    //     .isLength({ min: 6 })
+    //     .optional({ nullable: true })
+    //     .withMessage('Website should contain at least 6 characters')
+    //     .isURL()
+    //     .withMessage('Website should be an url')
+    //     .trim(),
 
     check('shopName')
         .isLength({ min: 3 })
