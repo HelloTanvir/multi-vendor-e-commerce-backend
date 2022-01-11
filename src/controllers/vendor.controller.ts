@@ -124,12 +124,14 @@ export const profileUpdate = async (req: Request, res: Response) => {
         if (postalCode) (req.user as IVendor).postalCode = postalCode;
         if (website) (req.user as IVendor).website = website;
 
+        // saving here because isVerfied property should be true for saving the shop name
+        await req.user.save();
+
         // save shop name if user is verified
         if (shopName && (req.user as IVendor).isVerified) {
             (req.user as IVendor).shopName = shopName;
+            await req.user.save();
         }
-
-        await req.user.save();
 
         res.status(200).json({
             data: req.user,
