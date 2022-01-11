@@ -124,28 +124,12 @@ export const profileUpdate = async (req: Request, res: Response) => {
         if (postalCode) (req.user as IVendor).postalCode = postalCode;
         if (website) (req.user as IVendor).website = website;
 
-        await req.user.save();
-
         // save shop name if user is verified
         if (shopName && (req.user as IVendor).isVerified) {
-            const isShopNameExist = await Vendor.findOne({ shopName });
-
-            if (isShopNameExist) {
-                res.status(400).json({
-                    errors: {
-                        common: {
-                            msg: 'Shop name should be unique',
-                        },
-                    },
-                });
-
-                return;
-            }
-
             (req.user as IVendor).shopName = shopName;
-
-            await req.user.save();
         }
+
+        await req.user.save();
 
         res.status(200).json({
             data: req.user,
