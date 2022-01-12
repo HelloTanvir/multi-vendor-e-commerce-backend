@@ -41,21 +41,11 @@ app.use(xss());
 // middleware to protect against HTTP Parameter Pollution attacks
 app.use(hpp());
 
-// prevent cors issue
-// app.use(
-//     cors({
-//         origin: process.env.FRONTEND_URL,
-//         credentials: true,
-//     })
-// );
-
-// development
+// allow origin for cors
 app.use(
     cors({
         origin: [
-            'http://localhost:3000',
             'http://localhost:8080',
-            'https://quirky-meninsky-8c97db.netlify.app',
             'https://sellbeez-git-desktop-knockoutez.vercel.app',
             'https://sellbee-user.netlify.app',
         ],
@@ -85,8 +75,6 @@ mongoose
     .then(() => {
         console.log('MongoDB Connected Successfully');
 
-        // for localhost
-        // const client = redis.createClient();
         const client = redis.createClient({
             url: process.env.REDIS_URL,
             password: process.env.REDIS_PASSWORD,
