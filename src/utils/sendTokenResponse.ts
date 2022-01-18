@@ -29,7 +29,7 @@ const sendTokenResponse = async (
             expires: new Date(Date.now() + +process.env.JWT_COOKIE_EXPIRE * 1000),
             httpOnly: true,
             secure: isProduction,
-            sameSite: isProduction ? 'strict' : 'none',
+            sameSite: 'none',
         };
 
         res.status(statusCode)
