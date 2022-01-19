@@ -96,7 +96,7 @@ export const deleteCoupon = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid coupon id');
         }
 
-        if (coupon.vendorId !== req.user.id) {
+        if (coupon.vendorId.toString() !== req.user.id) {
             throw new createHttpError.BadRequest('You are not the vendor of this coupon');
         }
 
