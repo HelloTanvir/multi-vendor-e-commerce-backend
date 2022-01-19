@@ -100,7 +100,7 @@ export const updateCollection = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid collection id');
         }
 
-        if (collection.vendorId !== req.user.id) {
+        if (collection.vendorId.toString() !== req.user.id) {
             throw new createHttpError.BadRequest('You are not the vendor of this collection');
         }
 
@@ -137,7 +137,7 @@ export const deleteCollection = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid collection id');
         }
 
-        if (collection.vendorId !== req.user.id) {
+        if (collection.vendorId.toString() !== req.user.id) {
             throw new createHttpError.BadRequest('You are not the vendor of this collection');
         }
 
