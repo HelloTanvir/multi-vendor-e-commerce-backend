@@ -12,17 +12,13 @@ export const verifyAccessToken =
         try {
             let token = '';
 
-            // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            //     // get token from Bearer token in header
-            //     [, token] = req.headers.authorization.split(' ');
-            // } else if (req.cookies['access-token']) {
-            //     // get token from cookie
+            if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+                [, token] = req.headers.authorization.split(' ');
+            }
+
+            // if (req.cookies['access-token']) {
             //     token = req.cookies['access-token'];
             // }
-
-            if (req.cookies['access-token']) {
-                token = req.cookies['access-token'];
-            }
 
             // make sure token exists
             if (!token) {
@@ -103,11 +99,11 @@ export const verifyAccessToken =
 
 export const verifyRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let refreshToken = '';
+        const { refreshToken } = req.body as { refreshToken: string };
 
-        if (req.cookies['refresh-token']) {
-            refreshToken = req.cookies['refresh-token'];
-        }
+        // if (req.cookies['refresh-token']) {
+        //     refreshToken = req.cookies['refresh-token'];
+        // }
 
         // make sure token exists
         if (!refreshToken) {
