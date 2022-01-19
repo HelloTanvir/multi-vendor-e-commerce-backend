@@ -45,9 +45,16 @@ app.use(hpp());
 app.use(
     cors({
         origin: [
+            '*',
+            'http://localhost:3000',
             'http://localhost:8080',
+            'https://quirky-meninsky-8c97db.netlify.app',
             'https://sellbeez-git-desktop-knockoutez.vercel.app',
             'https://sellbee-user.netlify.app',
+            'http://mysellbee.com',
+            'http://mysellbee.com',
+            'http://user.mysellbee.com',
+            '*.mysellbee.com',
         ],
         credentials: true,
     })
@@ -71,6 +78,7 @@ app.use(errorHandler);
 
 // connect to database and start the app
 mongoose
+
     .connect(process.env.MONGO_URL)
     .then(() => {
         console.log('MongoDB Connected Successfully');
