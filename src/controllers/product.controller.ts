@@ -115,7 +115,7 @@ export const updateProduct = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid product id');
         }
 
-        if (product.vendorId !== req.user.id) {
+        if (product.vendorId.toString() !== req.user.id) {
             throw new createHttpError.BadRequest('You are not the vendor of this product');
         }
 
@@ -167,7 +167,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
             throw new createHttpError.BadRequest('Invalid product id');
         }
 
-        if (product.vendorId !== req.user.id) {
+        if (product.vendorId.toString() !== req.user.id) {
             throw new createHttpError.BadRequest('You are not the vendor of this product');
         }
 
