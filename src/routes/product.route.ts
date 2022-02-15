@@ -22,7 +22,7 @@ const productRouter = Router();
 productRouter.route('/customer').get(getProductsForCustomer);
 
 // test
-productRouter.route('/test').get((req: Request, res: Response) => {
+productRouter.route('/test').post((req: Request, res: Response) => {
     res.json({
         data: req.body,
     });
