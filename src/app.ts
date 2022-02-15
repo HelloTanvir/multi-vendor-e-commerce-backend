@@ -48,6 +48,7 @@ app.use(
             '*',
             'http://localhost:3000',
             'http://localhost:8080',
+            'https://sb-1.webflow.io/product',
             'https://quirky-meninsky-8c97db.netlify.app',
             'https://sellbeez-git-desktop-knockoutez.vercel.app',
             'https://sellbee-user.netlify.app',
