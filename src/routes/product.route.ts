@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import {
     createProduct,
     deleteProduct,
@@ -20,6 +20,13 @@ const productRouter = Router();
 // URL: /v1/products/customer?page=1&size=10 (for pagination)
 // URL: /v1/products/customer?priceStart=100&priceEnd=1000 (for filtering)
 productRouter.route('/customer').get(getProductsForCustomer);
+
+// test
+productRouter.route('/test').get((req: Request, res: Response) => {
+    res.json({
+        data: req.body,
+    });
+});
 
 // URL: /v1/products
 // URL: /v1/products?page=1&size=10 (for pagination)
