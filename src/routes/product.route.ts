@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import {
     createProduct,
     deleteProduct,
@@ -12,6 +12,7 @@ import imageUpload from '../middlewares/imageUpload';
 import { productUpdateValidator, productValidator } from '../middlewares/product.validator';
 import validationHandler from '../middlewares/validationHandler';
 import { verifyAccessToken } from '../middlewares/verifyToken';
+import Test from '../models/test.model';
 
 const productRouter = Router();
 
@@ -20,6 +21,19 @@ const productRouter = Router();
 // URL: /v1/products/customer?page=1&size=10 (for pagination)
 // URL: /v1/products/customer?priceStart=100&priceEnd=1000 (for filtering)
 productRouter.route('/customer').get(getProductsForCustomer);
+
+// test web-flow
+productRouter
+    .route('/test')
+    .post(async (req: Request, res: Response) => {
+        const test = new Test({ name: req.body.name, email: req.body.email });
+        await test.save();
+        res.send('data stored');
+    })
+    .get(async (req: Request, res: Response) => {
+        const data = await Test.find();
+        res.json({ data });
+    });
 
 // URL: /v1/products
 // URL: /v1/products?page=1&size=10 (for pagination)
